@@ -24,6 +24,7 @@ export function Placeholder(props: { index: number }) {
   const faviconUrl = url
     ? `https://icons.duckduckgo.com/ip2/${url.hostname}.ico`
     : ''
+  // url ? `https://www.google.com/s2/favicons?domain_url=${url.hostname}` : '',
 
   const firstLetter = (url?.host.at(0) ?? '').toUpperCase()
 
@@ -42,7 +43,6 @@ export function Placeholder(props: { index: number }) {
 
   const handleDragExit = (e: React.DragEvent) => {
     if (e.currentTarget.contains(e.relatedTarget as Node)) return
-    console.log('exit')
     setHighlighted(false)
   }
 
@@ -78,8 +78,9 @@ export function Placeholder(props: { index: number }) {
       onDragOver={handleDragOver}
       data-tip={value}
       className={cn(
-        'card card-border bg-base-300 w-17 h-17 text-center items-center justify-center tooltip select-none cursor-pointer',
+        'card card-border bg-base-300 w-17 h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
+        !sharedContext.dragData && 'tooltip',
       )}
       onClick={handleClick}
     >
