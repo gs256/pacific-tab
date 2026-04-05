@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDebounce } from './utils/use-debounce'
+import { GRID_COLUMNS, GRID_ROWS } from './utils/const'
 
 export interface SharedState {
   items: string[]
@@ -14,7 +15,7 @@ export interface SharedState {
 }
 
 function defaultItems() {
-  return ['', '', '']
+  return Array(GRID_ROWS * GRID_COLUMNS).map(() => '')
 }
 
 function loadItems() {
@@ -23,7 +24,7 @@ function loadItems() {
     return defaultItems()
   }
   const items: string[] = JSON.parse(data)
-  if (!Array.isArray(items)) {
+  if (!Array.isArray(items) || items.length !== defaultItems().length) {
     return defaultItems()
   }
   return items

@@ -1,0 +1,9 @@
+.app {
+  --grid-cols: 0;
+  --grid-rows: 0;
+}
+
+.grid {
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
