@@ -1,6 +1,7 @@
 import './App.css'
 import { Placeholder } from './Placeholder'
-import { SharedContext, useSharedState } from './shared-context'
+import { SharedContext } from './shared-context'
+import { useSharedState } from './shared-state'
 
 export function App() {
   const sharedState = useSharedState()
