@@ -35,6 +35,9 @@ export function App() {
             <Placeholder index={index} key={index} />
           ))}
         </div>
+        <div className="absolute left-50% bottom-4 text-slate-700 font-mono">
+          [pacific-tab]
+        </div>
       </div>
     </SharedContext.Provider>
   )
