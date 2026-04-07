@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useSharedContext } from './shared-context'
 import { cn } from '@/utils/cn'
+import { useContextMenuContext } from './context-menu/context-menu-context'
 
 export function Placeholder(props: { index: number }) {
   const sharedContext = useSharedContext()
@@ -8,6 +9,7 @@ export function Placeholder(props: { index: number }) {
   const [iconLoading, setIconLoading] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const ref = useRef(null)
+  const contextMenu = useContextMenuContext()
 
   const isUrl = useMemo(() => {
     return Boolean(value) && value.startsWith('http') // FIXME
@@ -24,7 +26,6 @@ export function Placeholder(props: { index: number }) {
   const faviconUrl = url
     ? `https://icons.duckduckgo.com/ip2/${url.hostname}.ico`
     : ''
-  // url ? `https://www.google.com/s2/favicons?domain_url=${url.hostname}` : '',
 
   const firstLetter = (url?.host.at(0) ?? '').toUpperCase()
 
@@ -77,6 +78,7 @@ export function Placeholder(props: { index: number }) {
       onDragLeave={handleDragExit}
       onDragOver={handleDragOver}
       data-tip={value}
+      onContextMenu={contextMenu.onClick}
       className={cn(
         'card card-border bg-base-300 w-17 h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
