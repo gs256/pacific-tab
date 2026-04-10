@@ -3,14 +3,16 @@ import { useSharedContext } from './shared-context'
 import { cn } from '@/utils/cn'
 import { useContextMenuContext } from './context-menu/context-menu-context'
 import { isUrl } from './utils/is-url'
+import { useToasterContext } from './toaster/toaster-context'
 
 export function Placeholder(props: { index: number }) {
   const sharedContext = useSharedContext()
   const value = sharedContext.items.at(props.index) ?? ''
   const [iconLoading, setIconLoading] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
-  const ref = useRef(null)
   const contextMenu = useContextMenuContext()
+  const toaster = useToasterContext()
+  const ref = useRef(null)
 
   const valueIsUrl = useMemo(() => isUrl(value), [value])
 
@@ -82,6 +84,8 @@ export function Placeholder(props: { index: number }) {
           window.navigator.clipboard.readText().then((text) => {
             if (isUrl(text)) {
               sharedContext.setUrl(props.index, text)
+            } else {
+              toaster.show({ text: 'Not a valid url', severity: 'error' })
             }
           })
         }

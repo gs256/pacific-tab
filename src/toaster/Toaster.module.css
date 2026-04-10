@@ -1,0 +1,20 @@
+.toast {
+  --translate-y: 30px;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s;
+}
+
+.toast.off {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(calc(var(--translate-y) * -1));
+}
+
+.toast.on {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
