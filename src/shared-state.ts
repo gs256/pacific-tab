@@ -15,7 +15,7 @@ export interface SharedState {
 }
 
 function defaultItems() {
-  return Array(GRID_ROWS * GRID_COLUMNS).map(() => '')
+  return Array(GRID_ROWS * GRID_COLUMNS).fill('')
 }
 
 function loadItems() {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   ContextMenuContext,
   type ContextMenuContextType,
@@ -9,6 +9,8 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
     x: number
     y: number
   } | null>(null)
+  const [items, setItems] = useState<{ id: string; label: string }[]>([])
+  const selectCallback = useRef<(id: string) => void | null>(null)
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -19,11 +21,19 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
     const close = () => setContextMenu(null)
     window.addEventListener('click', () => close())
     window.addEventListener('keydown', (e) => e.key === 'Escape' && close())
-    return () => window.removeEventListener('click', close)
+
+    return () => {
+      window.removeEventListener('click', close)
+      selectCallback.current = null
+    }
   }, [])
 
   const context: ContextMenuContextType = {
-    onClick: handleContextMenu,
+    open: (params) => {
+      selectCallback.current = params.onClick
+      setItems(params.items)
+      handleContextMenu(params.event)
+    },
   }
 
   return (
@@ -34,15 +44,13 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
           className="menu bg-base-200 rounded-box w-56 fixed z-5"
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <a>Item 2</a>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
+          {items.map((item) => (
+            <li key={item.id}>
+              <a onClick={() => selectCallback.current?.(item.id)}>
+                {item.label}
+              </a>
+            </li>
+          ))}
         </ul>
       )}
     </ContextMenuContext.Provider>

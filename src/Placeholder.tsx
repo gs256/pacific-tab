@@ -71,6 +71,18 @@ export function Placeholder(props: { index: number }) {
     setHighlighted(false)
   }
 
+  const openContextMenu = (event: React.MouseEvent) => {
+    contextMenu.open({
+      event,
+      items: [{ id: 'delete', label: 'Delete' }],
+      onClick: (id: string) => {
+        if (id === 'delete') {
+          sharedContext.setUrl(props.index, '')
+        }
+      },
+    })
+  }
+
   return (
     <div
       onDrop={handleDrop}
@@ -78,7 +90,7 @@ export function Placeholder(props: { index: number }) {
       onDragLeave={handleDragExit}
       onDragOver={handleDragOver}
       data-tip={value}
-      onContextMenu={contextMenu.onClick}
+      onContextMenu={openContextMenu}
       className={cn(
         'card card-border bg-base-300 w-17 h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
