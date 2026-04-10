@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useSharedContext } from './shared-context'
 import { cn } from '@/utils/cn'
 import { useContextMenuContext } from './context-menu/context-menu-context'
+import { isUrl } from './utils/is-url'
 
 export function Placeholder(props: { index: number }) {
   const sharedContext = useSharedContext()
@@ -11,9 +12,7 @@ export function Placeholder(props: { index: number }) {
   const ref = useRef(null)
   const contextMenu = useContextMenuContext()
 
-  const isUrl = useMemo(() => {
-    return Boolean(value) && value.startsWith('http') // FIXME
-  }, [value])
+  const valueIsUrl = useMemo(() => isUrl(value), [value])
 
   const url = useMemo<URL | null>(() => {
     try {
@@ -30,7 +29,7 @@ export function Placeholder(props: { index: number }) {
   const firstLetter = (url?.host.at(0) ?? '').toUpperCase()
 
   const handleClick = () => {
-    if (isUrl) {
+    if (valueIsUrl) {
       window.open(value)
     }
   }
@@ -74,8 +73,18 @@ export function Placeholder(props: { index: number }) {
   const openContextMenu = (event: React.MouseEvent) => {
     contextMenu.open({
       event,
-      items: [{ id: 'delete', label: 'Delete' }],
+      items: [
+        { id: 'paste', label: 'Paste' },
+        { id: 'delete', label: 'Delete', className: 'text-red-400' },
+      ],
       onClick: (id: string) => {
+        if (id === 'paste') {
+          window.navigator.clipboard.readText().then((text) => {
+            if (isUrl(text)) {
+              sharedContext.setUrl(props.index, text)
+            }
+          })
+        }
         if (id === 'delete') {
           sharedContext.setUrl(props.index, '')
         }
@@ -105,7 +114,7 @@ export function Placeholder(props: { index: number }) {
           className="rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center"
           draggable
         >
-          {isUrl ? (
+          {valueIsUrl ? (
             <>
               <FaviconImg
                 key={faviconUrl}

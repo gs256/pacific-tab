@@ -2,14 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   ContextMenuContext,
   type ContextMenuContextType,
+  type ContextMenuItem,
 } from './context-menu-context'
+import { cn } from '@/utils/cn'
 
 export function ContextMenu(props: { children?: React.ReactNode }) {
   const [contextMenu, setContextMenu] = useState<{
     x: number
     y: number
   } | null>(null)
-  const [items, setItems] = useState<{ id: string; label: string }[]>([])
+  const [items, setItems] = useState<ContextMenuItem[]>([])
   const selectCallback = useRef<(id: string) => void | null>(null)
 
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -45,7 +47,7 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
           {items.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className={cn(item.className)}>
               <a onClick={() => selectCallback.current?.(item.id)}>
                 {item.label}
               </a>
