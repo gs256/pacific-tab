@@ -77,7 +77,12 @@ export function Placeholder(props: { index: number }) {
       event,
       items: [
         { id: 'paste', label: 'Paste' },
-        { id: 'delete', label: 'Delete', className: 'text-red-400' },
+        {
+          id: 'delete',
+          label: 'Delete',
+          className: valueIsUrl ? 'text-red-400' : '',
+          disabled: !valueIsUrl,
+        },
       ],
       onClick: (id: string) => {
         if (id === 'paste') {

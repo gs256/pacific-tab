@@ -47,8 +47,17 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
           style={{ top: contextMenu.y, left: contextMenu.x }}
         >
           {items.map((item) => (
-            <li key={item.id} className={cn(item.className)}>
-              <a onClick={() => selectCallback.current?.(item.id)}>
+            <li
+              key={item.id}
+              className={cn(
+                item.className,
+                item.disabled === true && 'menu-disabled',
+              )}
+            >
+              <a
+                onClick={() => selectCallback.current?.(item.id)}
+                aria-disabled={item.disabled === true}
+              >
                 {item.label}
               </a>
             </li>

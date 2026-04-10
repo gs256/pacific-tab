@@ -5,6 +5,7 @@ export interface ContextMenuItem {
   id: string
   label: string
   className?: string
+  disabled?: boolean
 }
 
 export interface ContextMenuContextType {
