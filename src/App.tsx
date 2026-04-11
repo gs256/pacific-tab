@@ -1,4 +1,3 @@
-import { Placeholder } from './Placeholder'
 import { SharedContext } from './shared-context'
 import { useSharedState } from './shared-state'
 import { cn } from './utils/cn'
@@ -7,6 +6,7 @@ import styles from './App.module.css'
 import type React from 'react'
 import { ContextMenu } from './context-menu/ContextMenu'
 import { Toaster } from './toaster/Toaster'
+import { WidgetGrid } from './WidgetGrid'
 
 export function App() {
   const sharedState = useSharedState()
@@ -27,18 +27,7 @@ export function App() {
               } as React.CSSProperties
             }
           >
-            <div
-              className={cn(
-                styles.grid,
-                'grid gap-4',
-                `grid-cols-${GRID_COLUMNS}`,
-                `grid-rows-${GRID_ROWS}`,
-              )}
-            >
-              {sharedState.items.map((_, index) => (
-                <Placeholder index={index} key={index} />
-              ))}
-            </div>
+            <WidgetGrid />
             <div className="absolute left-50% bottom-4 text-slate-600 font-mono">
               [pacific-tab]
             </div>

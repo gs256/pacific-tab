@@ -1,40 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useSharedContext } from './shared-context'
 import { cn } from '@/utils/cn'
 import { useContextMenuContext } from './context-menu/context-menu-context'
 import { isUrl } from './utils/is-url'
 import { useToasterContext } from './toaster/toaster-context'
 
-export function Placeholder(props: { index: number }) {
+export function Placeholder(props: {
+  index: number
+  children?: React.ReactNode
+}) {
   const sharedContext = useSharedContext()
-  const value = sharedContext.items.at(props.index) ?? ''
-  const [iconLoading, setIconLoading] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()
-  const ref = useRef(null)
-
-  const valueIsUrl = useMemo(() => isUrl(value), [value])
-
-  const url = useMemo<URL | null>(() => {
-    try {
-      return new URL(value)
-    } catch {
-      return null
-    }
-  }, [value])
-
-  const faviconUrl = url
-    ? `https://icons.duckduckgo.com/ip2/${url.hostname}.ico`
-    : ''
-
-  const firstLetter = (url?.host.at(0) ?? '').toUpperCase()
-
-  const handleClick = () => {
-    if (valueIsUrl) {
-      window.open(value)
-    }
-  }
 
   const handleDragEnter = () => {
     const dragData = sharedContext.dragData
@@ -52,10 +30,10 @@ export function Placeholder(props: { index: number }) {
     e.preventDefault()
   }
 
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', value)
-    sharedContext.setDragData({ index: props.index, value })
-  }
+  // const handleDragStart = (e: React.DragEvent) => {
+  //   e.dataTransfer.setData('text/plain', value)
+  //   sharedContext.setDragData({ index: props.index, value })
+  // }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
@@ -80,8 +58,8 @@ export function Placeholder(props: { index: number }) {
         {
           id: 'delete',
           label: 'Delete',
-          className: valueIsUrl ? 'text-red-400' : '',
-          disabled: !valueIsUrl,
+          // className: valueIsUrl ? 'text-red-400' : '',
+          // disabled: !valueIsUrl,
         },
       ],
       onClick: (id: string) => {
@@ -107,14 +85,12 @@ export function Placeholder(props: { index: number }) {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragExit}
       onDragOver={handleDragOver}
-      data-tip={value}
       onContextMenu={openContextMenu}
       className={cn(
         'card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
         !sharedContext.dragData && 'tooltip',
       )}
-      onClick={handleClick}
       style={
         props.index === 2
           ? {
@@ -123,53 +99,7 @@ export function Placeholder(props: { index: number }) {
           : {}
       }
     >
-      {value && (
-        <div
-          ref={ref}
-          onDragStart={handleDragStart}
-          className="rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center"
-          draggable
-        >
-          {valueIsUrl ? (
-            <>
-              <FaviconImg
-                key={faviconUrl}
-                src={faviconUrl}
-                setLoading={setIconLoading}
-              />
-              {iconLoading && <div className="absolute">{firstLetter}</div>}
-            </>
-          ) : (
-            <>{firstLetter}</>
-          )}
-        </div>
-      )}
+      {props.children && <>{props.children}</>}
     </div>
-  )
-}
-
-function FaviconImg(props: {
-  src: string
-  setLoading: (isLoading: boolean) => void
-}) {
-  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>(
-    'loading',
-  )
-
-  useEffect(() => {
-    props.setLoading(status === 'loading')
-  }, [props, status])
-
-  return (
-    <img
-      src={props.src}
-      alt="favicon"
-      onLoad={() => setStatus('loaded')}
-      onError={() => setStatus('error')}
-      className={cn(
-        'w-7 h-7 pointer-events-none',
-        status !== 'loaded' && 'invisible',
-      )}
-    />
   )
 }

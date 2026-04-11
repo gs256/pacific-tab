@@ -2,8 +2,15 @@ import { useEffect, useState } from 'react'
 import { useDebounce } from './utils/use-debounce'
 import { GRID_COLUMNS, GRID_ROWS } from './utils/const'
 
+export type WidgetType = 'url'
+
+export interface WidgetConfig {
+  type: WidgetType
+  data: string
+}
+
 export interface SharedState {
-  items: string[]
+  items: Array<WidgetConfig | null>
   dragData: {
     index: number
     value: string
@@ -14,8 +21,8 @@ export interface SharedState {
   swapValues(index1: number, index2: number): void
 }
 
-function defaultItems() {
-  return Array(GRID_ROWS * GRID_COLUMNS).fill('')
+function defaultItems(): Array<WidgetConfig | null> {
+  return Array(GRID_ROWS * GRID_COLUMNS).fill(null)
 }
 
 function loadItems() {
@@ -23,7 +30,7 @@ function loadItems() {
   if (!data) {
     return defaultItems()
   }
-  const items: string[] = JSON.parse(data)
+  const items: Array<WidgetConfig | null> = JSON.parse(data)
   if (!Array.isArray(items) || items.length !== defaultItems().length) {
     return defaultItems()
   }
@@ -31,11 +38,13 @@ function loadItems() {
 }
 
 export function useSharedState() {
-  const [items, setItems] = useState<string[]>(loadItems())
+  const [items, setItems] = useState<Array<WidgetConfig | null>>(loadItems())
   const [dragData, setDragData] = useState<SharedState['dragData'] | null>(null)
 
   const setUrl = (index: number, url: string) => {
-    setItems(items.map((item, i) => (i === index ? url : item)))
+    setItems(
+      items.map((item, i) => (i === index ? { type: 'url', data: url } : item)),
+    )
   }
 
   const swapValues = (index1: number, index2: number) => {
