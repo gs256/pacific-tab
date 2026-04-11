@@ -90,7 +90,7 @@ export function Placeholder(props: { index: number }) {
             if (isUrl(text)) {
               sharedContext.setUrl(props.index, text)
             } else {
-              toaster.show({ text: 'Not a valid url', severity: 'error' })
+              toaster.show({ text: 'Not a valid URL', severity: 'error' })
             }
           })
         }
@@ -110,11 +110,18 @@ export function Placeholder(props: { index: number }) {
       data-tip={value}
       onContextMenu={openContextMenu}
       className={cn(
-        'card card-border bg-base-300 w-17 h-17 text-center items-center justify-center select-none cursor-pointer',
+        'card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
         !sharedContext.dragData && 'tooltip',
       )}
       onClick={handleClick}
+      style={
+        props.index === 2
+          ? {
+              gridColumn: '3 / span 2',
+            }
+          : {}
+      }
     >
       {value && (
         <div
