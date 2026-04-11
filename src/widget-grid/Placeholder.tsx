@@ -14,6 +14,8 @@ export function Placeholder(props: {
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()
 
+  const hasWidget = Boolean(props.children)
+
   const handleDragEnter = () => {
     const dragData = sharedContext.dragData
     if (dragData && dragData.index !== props.index) {
@@ -42,8 +44,8 @@ export function Placeholder(props: {
       sharedContext.swapValues(props.index, dragData.index)
     } else {
       const dropped = e.dataTransfer?.getData('text/plain')
-      if (Boolean(dropped) && dropped.startsWith('http')) {
-        sharedContext.setUrl(props.index, dropped)
+      if (isUrl(dropped)) {
+        sharedContext.setWidget(props.index, { type: 'url', data: dropped })
       }
     }
     sharedContext.setDragData(null)
@@ -58,22 +60,25 @@ export function Placeholder(props: {
         {
           id: 'delete',
           label: 'Delete',
-          // className: valueIsUrl ? 'text-red-400' : '',
-          // disabled: !valueIsUrl,
+          className: hasWidget ? 'text-red-400' : '',
+          disabled: !hasWidget,
         },
       ],
       onClick: (id: string) => {
         if (id === 'paste') {
           window.navigator.clipboard.readText().then((text) => {
             if (isUrl(text)) {
-              sharedContext.setUrl(props.index, text)
+              sharedContext.setWidget(props.index, {
+                type: 'url',
+                data: text,
+              })
             } else {
               toaster.show({ text: 'Not a valid URL', severity: 'error' })
             }
           })
         }
         if (id === 'delete') {
-          sharedContext.setUrl(props.index, '')
+          sharedContext.setWidget(props.index, null)
         }
       },
     })

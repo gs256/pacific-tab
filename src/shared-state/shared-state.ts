@@ -16,9 +16,9 @@ export interface SharedState {
     value: string
   } | null
 
-  setUrl(index: number, url: string): void
   setDragData(dragData: SharedState['dragData']): void
   swapValues(index1: number, index2: number): void
+  setWidget(index: number, widget: WidgetConfig | null): void
 }
 
 function defaultItems(): Array<WidgetConfig | null> {
@@ -41,10 +41,8 @@ export function useSharedState() {
   const [items, setItems] = useState<Array<WidgetConfig | null>>(loadItems())
   const [dragData, setDragData] = useState<SharedState['dragData'] | null>(null)
 
-  const setUrl = (index: number, url: string) => {
-    setItems(
-      items.map((item, i) => (i === index ? { type: 'url', data: url } : item)),
-    )
+  const setWidget = (index: number, widget: WidgetConfig | null) => {
+    setItems(items.map((item, i) => (i === index ? widget : item)))
   }
 
   const swapValues = (index1: number, index2: number) => {
@@ -69,7 +67,7 @@ export function useSharedState() {
 
   return {
     items: items,
-    setUrl,
+    setWidget,
     dragData,
     setDragData,
     swapValues,
