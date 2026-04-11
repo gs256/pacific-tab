@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '../common/utils/cn'
 import { useSharedContext } from '../shared-state/shared-context'
 import { isUrl } from '../common/utils/is-url'
+import { usePlaceholderContext } from './placeholder-context'
 
 function urlOrNull(str: string) {
   try {
@@ -15,6 +16,12 @@ export function BookmarkWidget(props: { index: number; value: string }) {
   const sharedContext = useSharedContext()
   const ref = useRef(null)
   const [iconLoading, setIconLoading] = useState(false)
+  const placeholder = usePlaceholderContext()
+
+  useEffect(() => {
+    placeholder.setTooltip(props.value)
+    return () => placeholder.setTooltip('')
+  }, [placeholder, props.value])
 
   const url = urlOrNull(props.value)
 
@@ -40,9 +47,10 @@ export function BookmarkWidget(props: { index: number; value: string }) {
     <div
       ref={ref}
       onDragStart={handleDragStart}
-      className="rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center"
+      className={cn(
+        'rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center',
+      )}
       onClick={handleClick}
-      data-tip={props.value}
       draggable
     >
       <FaviconImg

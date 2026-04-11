@@ -4,6 +4,7 @@ import { cn } from '@/common/utils/cn'
 import { useContextMenuContext } from '../context-menu/context-menu-context'
 import { isUrl } from '../common/utils/is-url'
 import { useToasterContext } from '../toaster/toaster-context'
+import { PlaceholderContext } from './placeholder-context'
 
 export function Placeholder(props: {
   index: number
@@ -13,6 +14,7 @@ export function Placeholder(props: {
   const [highlighted, setHighlighted] = useState(false)
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()
+  const [tooltip, setTooltip] = useState('')
 
   const hasWidget = Boolean(props.children)
 
@@ -31,11 +33,6 @@ export function Placeholder(props: {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
-
-  // const handleDragStart = (e: React.DragEvent) => {
-  //   e.dataTransfer.setData('text/plain', value)
-  //   sharedContext.setDragData({ index: props.index, value })
-  // }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
@@ -96,6 +93,7 @@ export function Placeholder(props: {
         highlighted && 'bg-emerald-900',
         !sharedContext.dragData && 'tooltip',
       )}
+      data-tip={tooltip}
       style={
         props.index === 2
           ? {
@@ -104,7 +102,9 @@ export function Placeholder(props: {
           : {}
       }
     >
-      {props.children && <>{props.children}</>}
+      <PlaceholderContext.Provider value={{ setTooltip }}>
+        {props.children && <>{props.children}</>}
+      </PlaceholderContext.Provider>
     </div>
   )
 }
