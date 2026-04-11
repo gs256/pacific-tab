@@ -1,4 +1,4 @@
-import { createContext } from '@/create-context'
+import { createContext } from '@/common/utils/create-context'
 import type React from 'react'
 
 export interface ContextMenuItem {

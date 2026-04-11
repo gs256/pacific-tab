@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useSharedContext } from './shared-context'
-import { cn } from '@/utils/cn'
-import { useContextMenuContext } from './context-menu/context-menu-context'
-import { isUrl } from './utils/is-url'
-import { useToasterContext } from './toaster/toaster-context'
+import { useSharedContext } from '../shared-state/shared-context'
+import { cn } from '@/common/utils/cn'
+import { useContextMenuContext } from '../context-menu/context-menu-context'
+import { isUrl } from '../common/utils/is-url'
+import { useToasterContext } from '../toaster/toaster-context'
 
 export function Placeholder(props: {
   index: number

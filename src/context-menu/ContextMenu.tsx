@@ -4,7 +4,7 @@ import {
   type ContextMenuContextType,
   type ContextMenuItem,
 } from './context-menu-context'
-import { cn } from '@/utils/cn'
+import { cn } from '@/common/utils/cn'
 
 export function ContextMenu(props: { children?: React.ReactNode }) {
   const [contextMenu, setContextMenu] = useState<{

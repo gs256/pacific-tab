@@ -1,8 +1,8 @@
 import { BookmarkWidget } from './BookmarkWidget'
 import { Placeholder } from './Placeholder'
-import { useSharedContext } from './shared-context'
-import { cn } from './utils/cn'
-import { GRID_COLUMNS, GRID_ROWS } from './utils/const'
+import { useSharedContext } from '../shared-state/shared-context'
+import { cn } from '../common/utils/cn'
+import { GRID_COLUMNS, GRID_ROWS } from '../common/utils/const'
 import styles from './WidgetGrid.module.css'
 
 export function WidgetGrid() {

@@ -1,12 +1,12 @@
-import { SharedContext } from './shared-context'
-import { useSharedState } from './shared-state'
-import { cn } from './utils/cn'
-import { GRID_COLUMNS, GRID_ROWS } from './utils/const'
+import { SharedContext } from './shared-state/shared-context'
+import { useSharedState } from './shared-state/shared-state'
+import { cn } from './common/utils/cn'
+import { GRID_COLUMNS, GRID_ROWS } from './common/utils/const'
 import styles from './App.module.css'
 import type React from 'react'
 import { ContextMenu } from './context-menu/ContextMenu'
 import { Toaster } from './toaster/Toaster'
-import { WidgetGrid } from './WidgetGrid'
+import { WidgetGrid } from './widget-grid/WidgetGrid'
 
 export function App() {
   const sharedState = useSharedState()

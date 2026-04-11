@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { cn } from './utils/cn'
-import { useSharedContext } from './shared-context'
-import { isUrl } from './utils/is-url'
+import { cn } from '../common/utils/cn'
+import { useSharedContext } from '../shared-state/shared-context'
+import { isUrl } from '../common/utils/is-url'
 
 function urlOrNull(str: string) {
   try {

@@ -5,7 +5,7 @@ import {
   type ToastOptions,
 } from './toaster-context'
 import { useRef, useState } from 'react'
-import { cn } from '@/utils/cn'
+import { cn } from '@/common/utils/cn'
 import styles from './Toaster.module.css'
 
 const severityClasses: Record<ToastOptions['severity'], string> = {

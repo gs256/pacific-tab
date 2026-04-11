@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useDebounce } from './utils/use-debounce'
-import { GRID_COLUMNS, GRID_ROWS } from './utils/const'
+import { useDebounce } from '../common/utils/use-debounce'
+import { GRID_COLUMNS, GRID_ROWS } from '../common/utils/const'
 
 export type WidgetType = 'url'
 
