@@ -5,10 +5,13 @@ import { useContextMenuContext } from '../context-menu/context-menu-context'
 import { isUrl } from '../common/utils/is-url'
 import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
+import type { WidgetConfig } from '@/shared-state/shared-state'
+import { BookmarkWidget } from './BookmarkWidget'
+import { ClockWidget } from './ClockWidget'
 
 export function Placeholder(props: {
   index: number
-  children?: React.ReactNode
+  widget: WidgetConfig | null
 }) {
   const sharedContext = useSharedContext()
   const [highlighted, setHighlighted] = useState(false)
@@ -16,7 +19,7 @@ export function Placeholder(props: {
   const toaster = useToasterContext()
   const [tooltip, setTooltip] = useState('')
 
-  const hasWidget = Boolean(props.children)
+  const hasWidget = Boolean(props.widget)
 
   const handleDragEnter = () => {
     const dragData = sharedContext.dragData
@@ -92,19 +95,24 @@ export function Placeholder(props: {
         'card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
         !sharedContext.dragData && 'tooltip',
+        sharedContext.isCollapsed(props.index) && 'hidden',
       )}
       data-tip={tooltip}
       style={
-        props.index === 2
+        props.widget?.spanX
           ? {
-              gridColumn: '3 / span 2',
+              gridColumnEnd: `span ${props.widget.spanX}`,
             }
           : {}
       }
     >
       <PlaceholderContext.Provider value={{ setTooltip }}>
-        {props.children && <>{props.children}</>}
+        {props.widget?.type === 'url' && (
+          <BookmarkWidget index={props.index} value={props.widget.data} />
+        )}
+        {props.widget?.type === 'clock' && <ClockWidget index={props.index} />}
       </PlaceholderContext.Provider>
+      <div className="absolute top-0 left-0">{props.index}</div>
     </div>
   )
 }

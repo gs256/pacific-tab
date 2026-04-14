@@ -43,10 +43,13 @@ export function BookmarkWidget(props: { index: number; value: string }) {
     sharedContext.setDragData({ index: props.index, value: props.value })
   }
 
+  const handleDragEnd = () => {}
+
   return (
     <div
       ref={ref}
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       className={cn(
         'rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center',
       )}

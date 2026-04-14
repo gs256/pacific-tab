@@ -1,4 +1,3 @@
-import { BookmarkWidget } from './BookmarkWidget'
 import { Placeholder } from './Placeholder'
 import { useSharedContext } from '../shared-state/shared-context'
 import { cn } from '../common/utils/cn'
@@ -18,11 +17,7 @@ export function WidgetGrid() {
       )}
     >
       {sharedContext.items.map((item, index) => (
-        <Placeholder index={index} key={index}>
-          {item?.type === 'url' && (
-            <BookmarkWidget index={index} value={item.data} />
-          )}
-        </Placeholder>
+        <Placeholder index={index} key={index} widget={item} />
       ))}
     </div>
   )

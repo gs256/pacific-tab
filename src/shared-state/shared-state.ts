@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { useDebounce } from '../common/utils/use-debounce'
 import { GRID_COLUMNS, GRID_ROWS } from '../common/utils/const'
 
-export type WidgetType = 'url'
+export type WidgetType = 'url' | 'clock'
 
 export interface WidgetConfig {
   type: WidgetType
   data: string
+  spanX?: number
 }
 
 export interface SharedState {
@@ -19,6 +20,7 @@ export interface SharedState {
   setDragData(dragData: SharedState['dragData']): void
   swapValues(index1: number, index2: number): void
   setWidget(index: number, widget: WidgetConfig | null): void
+  isCollapsed(index: number): boolean
 }
 
 function defaultItems(): Array<WidgetConfig | null> {
@@ -43,6 +45,17 @@ export function useSharedState() {
 
   const setWidget = (index: number, widget: WidgetConfig | null) => {
     setItems(items.map((item, i) => (i === index ? widget : item)))
+  }
+
+  const isCollapsed = (index: number) => {
+    const rowIndex = Math.floor(index / GRID_COLUMNS)
+    const iMin = GRID_COLUMNS * rowIndex
+    // const iMax = GRID_COLUMNS * (rowIndex + 1) - 1
+    const prevItem = items.at(index - 1)
+    if (index > iMin && prevItem?.spanX && prevItem.spanX > 1) {
+      return true
+    }
+    return false
   }
 
   const swapValues = (index1: number, index2: number) => {
@@ -71,5 +84,6 @@ export function useSharedState() {
     dragData,
     setDragData,
     swapValues,
+    isCollapsed,
   } satisfies SharedState
 }
