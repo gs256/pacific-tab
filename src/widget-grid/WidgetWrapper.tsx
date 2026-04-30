@@ -1,10 +1,10 @@
-import { useSharedContext } from '@/shared-state/shared-context'
+import { useSharedStore } from '@/shared-state/shared-state'
 import type { PropsWithChildren } from 'react'
 
 export function WidgetWrapper(
   props: { index: number; value: string } & PropsWithChildren,
 ) {
-  const sharedContext = useSharedContext()
+  const sharedContext = useSharedStore()
 
   const handleDragStart = () => {
     sharedContext.setDragData({ index: props.index, value: props.value })

@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useSharedContext } from '../shared-state/shared-context'
 import { cn } from '@/common/utils/cn'
 import { useContextMenuContext } from '../context-menu/context-menu-context'
 import { isUrl } from '../common/utils/is-url'
 import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
-import type { WidgetConfig } from '@/shared-state/shared-state'
+import { useSharedStore, type WidgetConfig } from '@/shared-state/shared-state'
 import { BookmarkWidget } from './BookmarkWidget'
 import { ClockWidget } from './ClockWidget'
 
@@ -13,7 +12,7 @@ export function Placeholder(props: {
   index: number
   widget: WidgetConfig | null
 }) {
-  const sharedContext = useSharedContext()
+  const sharedContext = useSharedStore()
   const [highlighted, setHighlighted] = useState(false)
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()

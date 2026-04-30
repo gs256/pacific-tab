@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDebounce } from '../common/utils/use-debounce'
 import { GRID_COLUMNS, GRID_ROWS } from '../common/utils/const'
+import { create } from 'zustand'
 
 export type WidgetType = 'url' | 'clock'
 
@@ -8,19 +9,6 @@ export interface WidgetConfig {
   type: WidgetType
   data: string
   spanX?: number
-}
-
-export interface SharedState {
-  items: Array<WidgetConfig | null>
-  dragData: {
-    index: number
-    value: string
-  } | null
-
-  setDragData(dragData: SharedState['dragData']): void
-  swapValues(index1: number, index2: number): void
-  setWidget(index: number, widget: WidgetConfig | null): void
-  isCollapsed(index: number): boolean
 }
 
 function defaultItems(): Array<WidgetConfig | null> {
@@ -39,36 +27,59 @@ function loadItems() {
   return items
 }
 
-export function useSharedState() {
-  const [items, setItems] = useState<Array<WidgetConfig | null>>(loadItems())
-  const [dragData, setDragData] = useState<SharedState['dragData'] | null>(null)
+export interface SharedState {
+  items: Array<WidgetConfig | null>
+  dragData: {
+    index: number
+    value: string
+  } | null
 
-  const setWidget = (index: number, widget: WidgetConfig | null) => {
-    setItems(items.map((item, i) => (i === index ? widget : item)))
-  }
+  setDragData(dragData: SharedState['dragData']): void
+  swapValues(index1: number, index2: number): void
+  setWidget(index: number, widget: WidgetConfig | null): void
+  isCollapsed(index: number): boolean
+}
 
-  const isCollapsed = (index: number) => {
-    const rowIndex = Math.floor(index / GRID_COLUMNS)
-    const iMin = GRID_COLUMNS * rowIndex
-    // const iMax = GRID_COLUMNS * (rowIndex + 1) - 1
-    const prevItem = items.at(index - 1)
-    if (index > iMin && prevItem?.spanX && prevItem.spanX > 1) {
-      return true
-    }
-    return false
-  }
+export const useSharedStore = create<SharedState>((set, state) => ({
+  items: loadItems(),
+  dragData: null,
 
-  const swapValues = (index1: number, index2: number) => {
-    const value1 = items[index1]
-    const value2 = items[index2]
-    setItems(
-      items.map((item, i) => {
+  setDragData: (dragData: SharedState['dragData']) => {
+    set(() => ({ dragData }))
+  },
+
+  swapValues: (index1: number, index2: number) => {
+    const value1 = state().items[index1]
+    const value2 = state().items[index2]
+    set((state) => ({
+      items: state.items.map((item, i) => {
         if (i === index1) return value2
         if (i === index2) return value1
         return item
       }),
-    )
-  }
+    }))
+  },
+
+  setWidget: (index: number, widget: WidgetConfig | null) => {
+    set((state) => ({
+      items: state.items.map((item, i) => (i === index ? widget : item)),
+    }))
+  },
+
+  isCollapsed: (index: number) => {
+    const rowIndex = Math.floor(index / GRID_COLUMNS)
+    const iMin = GRID_COLUMNS * rowIndex
+    // const iMax = GRID_COLUMNS * (rowIndex + 1) - 1
+    const prevItem = state().items.at(index - 1)
+    if (index > iMin && prevItem?.spanX && prevItem.spanX > 1) {
+      return true
+    }
+    return false
+  },
+}))
+
+export function useSharedState() {
+  const { items } = useSharedStore()
 
   const saveItemsToLocalStorage = useDebounce(() => {
     localStorage.setItem('items', JSON.stringify(items))
@@ -77,13 +88,4 @@ export function useSharedState() {
   useEffect(() => {
     saveItemsToLocalStorage()
   }, [items, saveItemsToLocalStorage])
-
-  return {
-    items: items,
-    setWidget,
-    dragData,
-    setDragData,
-    swapValues,
-    isCollapsed,
-  } satisfies SharedState
 }
