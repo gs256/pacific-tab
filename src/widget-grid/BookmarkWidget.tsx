@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '../common/utils/cn'
-import { useSharedContext } from '../shared-state/shared-context'
+// import { useSharedContext } from '../shared-state/shared-context'
 import { isUrl } from '../common/utils/is-url'
 import { usePlaceholderContext } from './placeholder-context'
+import { WidgetWrapper } from './WidgetWrapper'
 
 function urlOrNull(str: string) {
   try {
@@ -13,7 +14,7 @@ function urlOrNull(str: string) {
 }
 
 export function BookmarkWidget(props: { index: number; value: string }) {
-  const sharedContext = useSharedContext()
+  // const sharedContext = useSharedContext()
   const ref = useRef(null)
   const [iconLoading, setIconLoading] = useState(false)
   const placeholder = usePlaceholderContext()
@@ -39,30 +40,23 @@ export function BookmarkWidget(props: { index: number; value: string }) {
     }
   }
 
-  const handleDragStart = () => {
-    sharedContext.setDragData({ index: props.index, value: props.value })
-  }
-
-  const handleDragEnd = () => {}
-
   return (
-    <div
-      ref={ref}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      className={cn(
-        'rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center',
-      )}
-      onClick={handleClick}
-      draggable
-    >
-      <FaviconImg
-        key={faviconUrl}
-        src={faviconUrl}
-        setLoading={setIconLoading}
-      />
-      {iconLoading && <div className="absolute">{firstLetter}</div>}
-    </div>
+    <WidgetWrapper index={props.index} value={props.value}>
+      <div
+        ref={ref}
+        className={cn(
+          'rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center',
+        )}
+        onClick={handleClick}
+      >
+        <FaviconImg
+          key={faviconUrl}
+          src={faviconUrl}
+          setLoading={setIconLoading}
+        />
+        {iconLoading && <div className="absolute">{firstLetter}</div>}
+      </div>
+    </WidgetWrapper>
   )
 }
 
