@@ -51,6 +51,22 @@ export function Placeholder(props: {
     setHighlighted(false)
   }
 
+  const handleMouseUp = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const dragData = sharedContext.dragData
+    if (dragData) {
+      console.log('drop', dragData)
+      sharedContext.setWidget(props.index, {
+        type: 'url',
+        data: dragData.value,
+      } satisfies WidgetConfig)
+    } else {
+      console.log('no drag data')
+    }
+    sharedContext.setDragData(null)
+    setHighlighted(false)
+  }
+
   const openContextMenu = (event: React.MouseEvent) => {
     contextMenu.open({
       event,
@@ -86,6 +102,7 @@ export function Placeholder(props: {
   return (
     <div
       onDrop={handleDrop}
+      onMouseUp={handleMouseUp}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragExit}
       onDragOver={handleDragOver}

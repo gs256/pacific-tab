@@ -58,6 +58,8 @@ export const useSharedStore = create<SharedState>((set, state) => ({
         return item
       }),
     }))
+
+    console.log('returning new items', state().items)
   },
 
   setWidget: (index: number, widget: WidgetConfig | null) => {
