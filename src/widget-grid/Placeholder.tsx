@@ -55,7 +55,12 @@ export function Placeholder(props: {
     e.stopPropagation()
     const dragData = sharedContext.dragData
     if (dragData) {
-      console.log('drop', dragData)
+      if (props.widget) {
+        sharedContext.setWidget(dragData.index, {
+          type: 'url',
+          data: props.widget.data,
+        } satisfies WidgetConfig)
+      }
       sharedContext.setWidget(props.index, {
         type: 'url',
         data: dragData.value,
