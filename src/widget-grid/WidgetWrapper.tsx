@@ -1,8 +1,10 @@
+import { cn } from '@/common/utils/cn'
 import { useSharedStore, type WidgetConfig } from '@/shared-state/shared-state'
 import type { PropsWithChildren } from 'react'
 
 export function WidgetWrapper(
-  props: { index: number } & PropsWithChildren & WidgetConfig,
+  props: { index: number; className?: string } & PropsWithChildren &
+    WidgetConfig,
 ) {
   const sharedContext = useSharedStore()
 
@@ -21,6 +23,7 @@ export function WidgetWrapper(
       onDragEnd={handleDragEnd}
       onDrag={handleDrag}
       draggable
+      className={cn('flex', props.className)}
     >
       {props.children}
     </div>

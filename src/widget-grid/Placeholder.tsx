@@ -56,10 +56,7 @@ export function Placeholder(props: {
     const dragData = sharedContext.dragData
     if (dragData) {
       if (props.widget) {
-        sharedContext.setWidget(dragData.index, {
-          type: 'url',
-          data: props.widget.data,
-        } satisfies WidgetConfig)
+        sharedContext.setWidget(dragData.index, props.widget)
       }
       sharedContext.setWidget(props.index, dragData.widget)
     } else {
@@ -110,7 +107,7 @@ export function Placeholder(props: {
       onDragOver={handleDragOver}
       onContextMenu={openContextMenu}
       className={cn(
-        'card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
+        'flex card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
         !sharedContext.dragData && 'tooltip',
         sharedContext.isCollapsed(props.index) && 'hidden',

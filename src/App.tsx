@@ -23,6 +23,14 @@ export function App() {
     store.setDragData(null)
   }
 
+  const test = () => {
+    store.setWidget(1, {
+      type: 'clock',
+      data: '',
+      spanX: 2,
+    })
+  }
+
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove)
 
@@ -51,6 +59,7 @@ export function App() {
           <WidgetGrid />
           <div className="absolute left-50% bottom-4 text-slate-600 font-mono">
             [pacific-tab]
+            <button onClick={test}>add clock</button>
           </div>
         </div>
       </ContextMenu>
