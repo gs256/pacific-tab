@@ -41,7 +41,7 @@ export function BookmarkWidget(props: { index: number; value: string }) {
   }
 
   return (
-    <WidgetWrapper index={props.index} value={props.value}>
+    <WidgetWrapper index={props.index} data={props.value} type="url">
       <div
         ref={ref}
         className={cn(

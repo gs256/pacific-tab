@@ -61,10 +61,7 @@ export function Placeholder(props: {
           data: props.widget.data,
         } satisfies WidgetConfig)
       }
-      sharedContext.setWidget(props.index, {
-        type: 'url',
-        data: dragData.value,
-      } satisfies WidgetConfig)
+      sharedContext.setWidget(props.index, dragData.widget)
     } else {
       console.log('no drag data')
     }

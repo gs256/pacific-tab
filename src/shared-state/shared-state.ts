@@ -27,12 +27,14 @@ function loadItems() {
   return items
 }
 
+export interface DragData {
+  index: number
+  widget: WidgetConfig
+}
+
 export interface SharedState {
   items: Array<WidgetConfig | null>
-  dragData: {
-    index: number
-    value: string
-  } | null
+  dragData: DragData | null
 
   setDragData(dragData: SharedState['dragData']): void
   swapValues(index1: number, index2: number): void
