@@ -84,15 +84,24 @@ export const useSharedStore = create<SharedState>((set, state) => ({
   },
 
   handleDrop: (index?: number) => {
-    const dragData = state().dragData
+    const s = state()
+    const dragData = s.dragData
     if (dragData) {
       if (!index) {
-        state().setWidget(dragData.index, dragData?.widget)
+        s.setWidget(dragData.index, dragData?.widget)
       } else {
-        state().swapValues(index, dragData.index)
+        console.log('span', s.items[index]?.spanX)
+        if (s.items[index]?.spanX) {
+          s.setWidget(dragData.index, dragData?.widget)
+        } else if (s.items[index] === null) {
+          s.setWidget(index, dragData?.widget)
+        } else {
+          s.setWidget(dragData.index, s.items[index])
+          s.setWidget(index, dragData.widget)
+        }
       }
     }
-    state().setDragData(null)
+    s.setDragData(null)
   },
 }))
 

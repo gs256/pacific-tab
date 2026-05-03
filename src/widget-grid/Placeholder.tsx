@@ -49,16 +49,7 @@ export function Placeholder(props: {
 
   const handleMouseUp = (e: React.MouseEvent) => {
     e.stopPropagation()
-    const dragData = sharedContext.dragData
-    if (dragData) {
-      if (props.widget) {
-        sharedContext.setWidget(dragData.index, props.widget)
-      }
-      sharedContext.setWidget(props.index, dragData.widget)
-    } else {
-      console.log('no drag data')
-    }
-    sharedContext.setDragData(null)
+    sharedContext.handleDrop(props.index)
     setHighlighted(false)
   }
 
