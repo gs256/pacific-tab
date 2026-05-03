@@ -87,7 +87,7 @@ export const useSharedStore = create<SharedState>((set, state) => ({
     const s = state()
     const dragData = s.dragData
     if (dragData) {
-      if (!index) {
+      if (index === undefined) {
         s.setWidget(dragData.index, dragData?.widget)
       } else {
         console.log('span', s.items[index]?.spanX)
