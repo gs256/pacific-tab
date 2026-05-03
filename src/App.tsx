@@ -20,7 +20,7 @@ export function App() {
 
   const handleMouseUp = () => {
     console.log('mouseup')
-    store.setDragData(null)
+    store.handleDrop(undefined)
   }
 
   const test = () => {

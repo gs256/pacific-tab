@@ -38,16 +38,12 @@ export function Placeholder(props: {
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
-    const dragData = sharedContext.dragData
-    if (dragData) {
-      sharedContext.swapValues(props.index, dragData.index)
+    const dropped = e.dataTransfer?.getData('text/plain')
+    if (isUrl(dropped)) {
+      sharedContext.setWidget(props.index, { type: 'url', data: dropped })
     } else {
-      const dropped = e.dataTransfer?.getData('text/plain')
-      if (isUrl(dropped)) {
-        sharedContext.setWidget(props.index, { type: 'url', data: dropped })
-      }
+      sharedContext.handleDrop(props.index)
     }
-    sharedContext.setDragData(null)
     setHighlighted(false)
   }
 

@@ -40,6 +40,8 @@ export interface SharedState {
   swapValues(index1: number, index2: number): void
   setWidget(index: number, widget: WidgetConfig | null): void
   isCollapsed(index: number): boolean
+
+  handleDrop(index: number | undefined): void
 }
 
 export const useSharedStore = create<SharedState>((set, state) => ({
@@ -79,6 +81,18 @@ export const useSharedStore = create<SharedState>((set, state) => ({
       return true
     }
     return false
+  },
+
+  handleDrop: (index?: number) => {
+    const dragData = state().dragData
+    if (dragData) {
+      if (!index) {
+        state().setWidget(dragData.index, dragData?.widget)
+      } else {
+        state().swapValues(index, dragData.index)
+      }
+    }
+    state().setDragData(null)
   },
 }))
 
