@@ -75,7 +75,6 @@ export const useSharedStore = create<SharedState>((set, state) => ({
   isCollapsed: (index: number) => {
     const rowIndex = Math.floor(index / GRID_COLUMNS)
     const iMin = GRID_COLUMNS * rowIndex
-    // const iMax = GRID_COLUMNS * (rowIndex + 1) - 1
     const prevItem = state().items.at(index - 1)
     if (index > iMin && prevItem?.spanX && prevItem.spanX > 1) {
       return true
@@ -86,18 +85,24 @@ export const useSharedStore = create<SharedState>((set, state) => ({
   handleDrop: (index?: number) => {
     const s = state()
     const dragData = s.dragData
+
+    const canPlace = () => {
+      if (index === undefined) return true
+      if (s.items[index]?.spanX) return false
+      // FIXME
+      if (dragData?.widget.spanX === 2 && s.items.at(index + 1)) return false
+      return true
+    }
+
     if (dragData) {
       if (index === undefined) {
         s.setWidget(dragData.index, dragData?.widget)
       } else {
-        console.log('span', s.items[index]?.spanX)
-        if (s.items[index]?.spanX) {
-          s.setWidget(dragData.index, dragData?.widget)
-        } else if (s.items[index] === null) {
-          s.setWidget(index, dragData?.widget)
-        } else {
+        if (canPlace()) {
           s.setWidget(dragData.index, s.items[index])
           s.setWidget(index, dragData.widget)
+        } else {
+          s.setWidget(dragData.index, dragData?.widget)
         }
       }
     }
