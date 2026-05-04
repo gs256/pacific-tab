@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '../common/utils/cn'
-// import { useSharedContext } from '../shared-state/shared-context'
 import { isUrl } from '../common/utils/is-url'
 import { usePlaceholderContext } from './placeholder-context'
 import { WidgetWrapper } from './WidgetWrapper'
@@ -14,15 +13,14 @@ function urlOrNull(str: string) {
 }
 
 export function BookmarkWidget(props: { index: number; value: string }) {
-  // const sharedContext = useSharedContext()
   const ref = useRef(null)
   const [iconLoading, setIconLoading] = useState(false)
-  const placeholder = usePlaceholderContext()
+  const { setTooltip } = usePlaceholderContext()
 
   useEffect(() => {
-    placeholder.setTooltip(props.value)
-    return () => placeholder.setTooltip('')
-  }, [placeholder, props.value])
+    setTooltip(props.value)
+    return () => setTooltip('')
+  }, [setTooltip, props.value])
 
   const url = urlOrNull(props.value)
 
@@ -64,13 +62,14 @@ function FaviconImg(props: {
   src: string
   setLoading: (isLoading: boolean) => void
 }) {
+  const { setLoading } = props
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>(
     'loading',
   )
 
   useEffect(() => {
-    props.setLoading(status === 'loading')
-  }, [props, status])
+    setLoading(status === 'loading')
+  }, [setLoading, status])
 
   return (
     <img

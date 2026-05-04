@@ -6,7 +6,7 @@ import type React from 'react'
 import { ContextMenu } from './context-menu/ContextMenu'
 import { Toaster } from './toaster/Toaster'
 import { WidgetGrid } from './widget-grid/WidgetGrid'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function App() {
   useSharedState()
@@ -14,12 +14,11 @@ export function App() {
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const ref = useRef<HTMLDivElement>(null)
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     setPosition({ x: e.clientX, y: e.clientY })
-  }
+  }, [])
 
   const handleMouseUp = () => {
-    console.log('mouseup')
     store.handleDrop(undefined)
   }
 
@@ -33,11 +32,10 @@ export function App() {
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove)
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [handleMouseMove])
 
   return (
     <Toaster>
