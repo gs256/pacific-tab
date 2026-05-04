@@ -84,12 +84,25 @@ export const useSharedStore = create<SharedState>((set, state) => ({
     const s = state()
     const dragData = s.dragData
 
+    const span = (widget?: WidgetConfig) => {
+      return widget ? (widget.spanX ?? 1) : 0
+    }
+
+    const willWrap = (index: number, spanX: number) => {
+      const rowIndex1 = Math.floor(index / GRID_COLUMNS)
+      const rowIndex2 = Math.floor((index + spanX - 1) / GRID_COLUMNS)
+      return rowIndex1 !== rowIndex2
+    }
+
     const canPlace = () => {
       if (index === undefined) return true
       if (s.items[index]?.spanX) return false
-      if (dragData?.widget.spanX === 2 && s.items.at(index)) return false
-      // FIXME
-      if (dragData?.widget.spanX === 2 && s.items.at(index + 1)) return false
+      const spanX = span(dragData?.widget)
+      if (spanX > 1) {
+        if (s.items.at(index)) return false
+        if (s.items.at(index + 1)) return false // FIXME (if spanX > 2)
+        if (willWrap(index, spanX)) return false
+      }
       return true
     }
 
