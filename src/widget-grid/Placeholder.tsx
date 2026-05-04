@@ -4,15 +4,16 @@ import { useContextMenuContext } from '../context-menu/context-menu-context'
 import { isUrl } from '../common/utils/is-url'
 import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
-import { useSharedStore, type WidgetConfig } from '@/shared-state/shared-state'
+import { useSharedStore } from '@/shared-state/shared-state'
 import { BookmarkWidget } from './BookmarkWidget'
 import { ClockWidget } from './ClockWidget'
+import type { WidgetConfig } from '@/common/types'
 
 export function Placeholder(props: {
   index: number
   widget: WidgetConfig | null
 }) {
-  const sharedContext = useSharedStore()
+  const { dragData, setWidget, handleDrop, isCollapsed } = useSharedStore()
   const [highlighted, setHighlighted] = useState(false)
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()
@@ -21,7 +22,6 @@ export function Placeholder(props: {
   const hasWidget = Boolean(props.widget)
 
   const handleDragEnter = () => {
-    const dragData = sharedContext.dragData
     if (dragData && dragData.index !== props.index) {
       setHighlighted(true)
     }
@@ -36,20 +36,20 @@ export function Placeholder(props: {
     e.preventDefault()
   }
 
-  const handleDrop = (e: React.DragEvent) => {
+  const onDrop = (e: React.DragEvent) => {
     e.preventDefault()
     const dropped = e.dataTransfer?.getData('text/plain')
     if (isUrl(dropped)) {
-      sharedContext.setWidget(props.index, { type: 'url', data: dropped })
+      setWidget(props.index, { type: 'url', data: dropped })
     } else {
-      sharedContext.handleDrop(props.index)
+      handleDrop(props.index)
     }
     setHighlighted(false)
   }
 
   const handleMouseUp = (e: React.MouseEvent) => {
     e.stopPropagation()
-    sharedContext.handleDrop(props.index)
+    handleDrop(props.index)
     setHighlighted(false)
   }
 
@@ -72,7 +72,7 @@ export function Placeholder(props: {
         if (id === 'paste') {
           window.navigator.clipboard.readText().then((text) => {
             if (isUrl(text)) {
-              sharedContext.setWidget(props.index, {
+              setWidget(props.index, {
                 type: 'url',
                 data: text,
               })
@@ -82,7 +82,7 @@ export function Placeholder(props: {
           })
         }
         if (id === 'delete') {
-          sharedContext.setWidget(props.index, null)
+          setWidget(props.index, null)
         }
       },
     })
@@ -90,7 +90,7 @@ export function Placeholder(props: {
 
   return (
     <div
-      onDrop={handleDrop}
+      onDrop={onDrop}
       onMouseUp={handleMouseUp}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragExit}
@@ -99,8 +99,8 @@ export function Placeholder(props: {
       className={cn(
         'flex card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
         highlighted && 'bg-emerald-900',
-        !sharedContext.dragData && 'tooltip',
-        sharedContext.isCollapsed(props.index) && 'hidden',
+        !dragData && 'tooltip',
+        isCollapsed(props.index) && 'hidden',
       )}
       data-tip={tooltip}
       style={

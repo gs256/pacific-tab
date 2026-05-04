@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function App() {
   useSharedState()
-  const store = useSharedStore()
+  const { handleDrop, setWidget, dragData } = useSharedStore()
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -19,11 +19,11 @@ export function App() {
   }, [])
 
   const handleMouseUp = () => {
-    store.handleDrop(undefined)
+    handleDrop(undefined)
   }
 
   const test = () => {
-    store.setWidget(1, {
+    setWidget(1, {
       type: 'clock',
       data: '',
       spanX: 2,
@@ -62,7 +62,7 @@ export function App() {
         </div>
       </ContextMenu>
 
-      {store.dragData && (
+      {dragData && (
         <div
           className="absolute"
           style={{ left: position.x, top: position.y, pointerEvents: 'none' }}
