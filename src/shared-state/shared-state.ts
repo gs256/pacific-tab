@@ -62,8 +62,6 @@ export const useSharedStore = create<SharedState>((set, state) => ({
         return item
       }),
     }))
-
-    console.log('returning new items', state().items)
   },
 
   setWidget: (index: number, widget: WidgetConfig | null) => {
@@ -89,6 +87,7 @@ export const useSharedStore = create<SharedState>((set, state) => ({
     const canPlace = () => {
       if (index === undefined) return true
       if (s.items[index]?.spanX) return false
+      if (dragData?.widget.spanX === 2 && s.items.at(index)) return false
       // FIXME
       if (dragData?.widget.spanX === 2 && s.items.at(index + 1)) return false
       return true
