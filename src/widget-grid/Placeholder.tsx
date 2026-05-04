@@ -54,6 +54,9 @@ export function Placeholder(props: {
   }
 
   const openContextMenu = (event: React.MouseEvent) => {
+    if (event.altKey || event.ctrlKey) {
+      return
+    }
     contextMenu.open({
       event,
       items: [
@@ -114,7 +117,6 @@ export function Placeholder(props: {
         )}
         {props.widget?.type === 'clock' && <ClockWidget index={props.index} />}
       </PlaceholderContext.Provider>
-      <div className="absolute top-0 left-0">{props.index}</div>
     </div>
   )
 }
