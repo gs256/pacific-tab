@@ -8,19 +8,29 @@ import { loadItems } from '@/common/utils/utils'
 export interface SharedState {
   items: Array<WidgetConfig | null>
   dragData: DragData | null
+  highlight: {
+    cells: number[]
+    color: 'green' | 'red'
+  } | null
 
-  setDragData(dragData: SharedState['dragData']): void
+  setDragData(dragData: DragData | null): void
   setWidget(index: number, widget: WidgetConfig | null): void
   isCollapsed(index: number): boolean
   handleDrop(index: number | undefined): void
+  handleMouseEnter(index: number): void
+  handleMouseLeave(index: number): void
 }
 
 export const useSharedStore = create<SharedState>((set, state) => ({
   items: loadItems(),
   dragData: null,
+  highlight: null,
 
-  setDragData: (dragData: SharedState['dragData']) => {
+  setDragData: (dragData: DragData | null) => {
     set(() => ({ dragData }))
+    if (!dragData) {
+      set(() => ({ highlight: null }))
+    }
   },
 
   setWidget: (index: number, widget: WidgetConfig | null) => {
@@ -37,6 +47,25 @@ export const useSharedStore = create<SharedState>((set, state) => ({
       return true
     }
     return false
+  },
+
+  handleMouseEnter: (index: number) => {
+    const dragData = state().dragData
+    // FIXME
+    const affectedIndices =
+      dragData?.widget.spanX === 2 ? [index, index + 1] : [index]
+    if (dragData) {
+      set(() => ({
+        highlight: {
+          cells: affectedIndices,
+          color: 'green',
+        },
+      }))
+    }
+  },
+
+  handleMouseLeave: () => {
+    set(() => ({ highlight: null }))
   },
 
   handleDrop: (index?: number) => {

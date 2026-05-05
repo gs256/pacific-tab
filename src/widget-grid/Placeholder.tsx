@@ -13,24 +13,40 @@ export function Placeholder(props: {
   index: number
   widget: WidgetConfig | null
 }) {
-  const { dragData, setWidget, handleDrop, isCollapsed } = useSharedStore()
-  const [highlighted, setHighlighted] = useState(false)
+  const {
+    dragData,
+    setWidget,
+    handleDrop,
+    isCollapsed,
+    handleMouseEnter,
+    handleMouseLeave,
+    highlight,
+  } = useSharedStore()
   const contextMenu = useContextMenuContext()
   const toaster = useToasterContext()
   const [tooltip, setTooltip] = useState('')
 
+  const highlighted = highlight?.cells.includes(props.index) ?? false
   const hasWidget = Boolean(props.widget)
 
-  const handleDragEnter = () => {
-    if (dragData && dragData.index !== props.index) {
-      setHighlighted(true)
-    }
+  const onMouseEnter = () => {
+    handleMouseEnter(props.index)
   }
 
-  const handleDragExit = (e: React.DragEvent) => {
-    if (e.currentTarget.contains(e.relatedTarget as Node)) return
-    setHighlighted(false)
+  const onMouseLeave = () => {
+    handleMouseLeave(props.index)
   }
+
+  // const handleDragEnter = () => {
+  //   if (dragData && dragData.index !== props.index) {
+  //     setHighlighted(true)
+  //   }
+  // }
+
+  // const handleDragExit = (e: React.DragEvent) => {
+  //   if (e.currentTarget.contains(e.relatedTarget as Node)) return
+  //   setHighlighted(false)
+  // }
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
@@ -44,13 +60,11 @@ export function Placeholder(props: {
     } else {
       handleDrop(props.index)
     }
-    setHighlighted(false)
   }
 
   const handleMouseUp = (e: React.MouseEvent) => {
     e.stopPropagation()
     handleDrop(props.index)
-    setHighlighted(false)
   }
 
   const openContextMenu = (event: React.MouseEvent) => {
@@ -92,8 +106,8 @@ export function Placeholder(props: {
     <div
       onDrop={onDrop}
       onMouseUp={handleMouseUp}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragExit}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       onDragOver={handleDragOver}
       onContextMenu={openContextMenu}
       className={cn(
