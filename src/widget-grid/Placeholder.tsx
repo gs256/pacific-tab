@@ -37,17 +37,6 @@ export function Placeholder(props: {
     handleMouseLeave(props.index)
   }
 
-  // const handleDragEnter = () => {
-  //   if (dragData && dragData.index !== props.index) {
-  //     setHighlighted(true)
-  //   }
-  // }
-
-  // const handleDragExit = (e: React.DragEvent) => {
-  //   if (e.currentTarget.contains(e.relatedTarget as Node)) return
-  //   setHighlighted(false)
-  // }
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
@@ -112,7 +101,8 @@ export function Placeholder(props: {
       onContextMenu={openContextMenu}
       className={cn(
         'flex card card-border bg-base-300 min-w-17 min-h-17 text-center items-center justify-center select-none cursor-pointer',
-        highlighted && 'bg-emerald-900',
+        highlighted &&
+          (highlight?.color === 'green' ? 'bg-emerald-900' : 'bg-rose-900'),
         !dragData && 'tooltip',
         isCollapsed(props.index) && 'hidden',
       )}

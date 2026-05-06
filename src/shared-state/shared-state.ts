@@ -27,6 +27,21 @@ const willWrap = (index: number, spanX: number) => {
   return rowIndex1 !== rowIndex2
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const isMultiCell = (widget: WidgetConfig | null | undefined) => {
+  const span = widget?.spanX ?? 1
+  return span > 1
+}
+
+const isSingleCell = (widget: WidgetConfig | null | undefined) => {
+  const span = widget?.spanX ?? 1
+  return span === 1
+}
+
+const span = (widget: WidgetConfig | null | undefined) => {
+  return widget?.spanX ?? 1
+}
+
 export const useSharedStore = create<SharedState>((set, state) => ({
   items: loadItems(),
   dragData: null,
@@ -57,6 +72,7 @@ export const useSharedStore = create<SharedState>((set, state) => ({
 
   handleMouseEnter: (index: number) => {
     const dragData = state().dragData
+    const items = state().items
 
     const affectedIndices = () => {
       if (!dragData?.widget.spanX || dragData?.widget.spanX === 1) {
@@ -73,11 +89,18 @@ export const useSharedStore = create<SharedState>((set, state) => ({
       return []
     }
 
+    const affectedCells = affectedIndices()
+
+    const canDrop = isSingleCell(dragData?.widget)
+      ? isSingleCell(items[index])
+      : affectedCells.length === span(dragData?.widget) &&
+        affectedCells.every((i) => items[i] === null)
+
     if (dragData) {
       set(() => ({
         highlight: {
-          cells: affectedIndices(),
-          color: 'green',
+          cells: affectedCells,
+          color: canDrop ? 'green' : 'red',
         },
       }))
     }
@@ -90,10 +113,6 @@ export const useSharedStore = create<SharedState>((set, state) => ({
   handleDrop: (index?: number) => {
     const s = state()
     const dragData = s.dragData
-
-    const span = (widget?: WidgetConfig) => {
-      return widget ? (widget.spanX ?? 1) : 0
-    }
 
     const canPlace = () => {
       if (index === undefined) return true
