@@ -4,6 +4,7 @@ import { GRID_COLUMNS } from '../common/utils/const'
 import { create } from 'zustand'
 import type { DragData, WidgetConfig } from '@/common/types'
 import { loadItems } from '@/common/utils/utils'
+import { isSingleCell, span, willWrap } from '@/common/utils/widget-utils'
 
 export interface SharedState {
   items: Array<WidgetConfig | null>
@@ -19,27 +20,6 @@ export interface SharedState {
   handleDrop(index: number | undefined): void
   handleMouseEnter(index: number): void
   handleMouseLeave(index: number): void
-}
-
-const willWrap = (index: number, spanX: number) => {
-  const rowIndex1 = Math.floor(index / GRID_COLUMNS)
-  const rowIndex2 = Math.floor((index + spanX - 1) / GRID_COLUMNS)
-  return rowIndex1 !== rowIndex2
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const isMultiCell = (widget: WidgetConfig | null | undefined) => {
-  const span = widget?.spanX ?? 1
-  return span > 1
-}
-
-const isSingleCell = (widget: WidgetConfig | null | undefined) => {
-  const span = widget?.spanX ?? 1
-  return span === 1
-}
-
-const span = (widget: WidgetConfig | null | undefined) => {
-  return widget?.spanX ?? 1
 }
 
 export const useSharedStore = create<SharedState>((set, state) => ({
