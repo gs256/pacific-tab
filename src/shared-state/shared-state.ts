@@ -21,6 +21,12 @@ export interface SharedState {
   handleMouseLeave(index: number): void
 }
 
+const willWrap = (index: number, spanX: number) => {
+  const rowIndex1 = Math.floor(index / GRID_COLUMNS)
+  const rowIndex2 = Math.floor((index + spanX - 1) / GRID_COLUMNS)
+  return rowIndex1 !== rowIndex2
+}
+
 export const useSharedStore = create<SharedState>((set, state) => ({
   items: loadItems(),
   dragData: null,
@@ -51,13 +57,26 @@ export const useSharedStore = create<SharedState>((set, state) => ({
 
   handleMouseEnter: (index: number) => {
     const dragData = state().dragData
-    // FIXME
-    const affectedIndices =
-      dragData?.widget.spanX === 2 ? [index, index + 1] : [index]
+
+    const affectedIndices = () => {
+      if (!dragData?.widget.spanX || dragData?.widget.spanX === 1) {
+        return [index]
+      }
+      // FIXME
+      if (dragData.widget.spanX === 2) {
+        if (willWrap(index, 2)) {
+          return [index]
+        } else {
+          return [index, index + 1]
+        }
+      }
+      return []
+    }
+
     if (dragData) {
       set(() => ({
         highlight: {
-          cells: affectedIndices,
+          cells: affectedIndices(),
           color: 'green',
         },
       }))
@@ -74,12 +93,6 @@ export const useSharedStore = create<SharedState>((set, state) => ({
 
     const span = (widget?: WidgetConfig) => {
       return widget ? (widget.spanX ?? 1) : 0
-    }
-
-    const willWrap = (index: number, spanX: number) => {
-      const rowIndex1 = Math.floor(index / GRID_COLUMNS)
-      const rowIndex2 = Math.floor((index + spanX - 1) / GRID_COLUMNS)
-      return rowIndex1 !== rowIndex2
     }
 
     const canPlace = () => {
