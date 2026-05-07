@@ -7,6 +7,7 @@ import { ContextMenu } from './context-menu/ContextMenu'
 import { Toaster } from './toaster/Toaster'
 import { WidgetGrid } from './widget-grid/WidgetGrid'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { WidgetDrawer } from './widget-drawer/WidgetDrawer'
 
 export function App() {
   useSharedState()
@@ -40,21 +41,21 @@ export function App() {
   return (
     <Toaster>
       <ContextMenu>
-        <div
-          ref={ref}
-          onMouseUp={handleMouseUp}
-          className={cn(
-            styles.app,
-            'flex items-center justify-center min-h-screen',
-          )}
-          style={
-            {
-              '--grid-cols': GRID_COLUMNS,
-              '--grid-rows': GRID_ROWS,
-            } as React.CSSProperties
-          }
-        >
-          <WidgetGrid />
+        <div ref={ref} onMouseUp={handleMouseUp}>
+          <WidgetDrawer
+            className={cn(
+              styles.app,
+              'flex items-center justify-center min-h-screen',
+            )}
+            style={
+              {
+                '--grid-cols': GRID_COLUMNS,
+                '--grid-rows': GRID_ROWS,
+              } as React.CSSProperties
+            }
+          >
+            <WidgetGrid />
+          </WidgetDrawer>
           <div className="absolute left-50% bottom-4 text-slate-600 font-mono">
             [pacific-tab]
             <button onClick={test}>add clock</button>

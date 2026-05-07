@@ -1,10 +1,14 @@
-import type { WidgetConfig } from '@/common/types'
+import type { WidgetConfig, WidgetVariant } from '@/common/types'
 import { cn } from '@/common/utils/cn'
 import { useSharedStore } from '@/shared-state/shared-state'
 import type { PropsWithChildren } from 'react'
 
 export function WidgetWrapper(
-  props: { index: number; className?: string } & PropsWithChildren &
+  props: {
+    index: number
+    className?: string
+    variant: WidgetVariant
+  } & PropsWithChildren &
     WidgetConfig,
 ) {
   const { setDragData, setWidget } = useSharedStore()

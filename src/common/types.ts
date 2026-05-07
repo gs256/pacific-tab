@@ -7,6 +7,8 @@ export interface WidgetConfig {
 }
 
 export interface DragData {
-  index: number
+  index?: number
   widget: WidgetConfig
 }
+
+export type WidgetVariant = 'default' | 'spawner'

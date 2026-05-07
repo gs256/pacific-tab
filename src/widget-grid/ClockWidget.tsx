@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { WidgetWrapper } from './WidgetWrapper'
+import type { WidgetVariant } from '@/common/types'
 
 function getTimeString() {
   const currentTime = new Date().toLocaleTimeString('en-US', {
@@ -9,7 +10,7 @@ function getTimeString() {
   return currentTime
 }
 
-export function ClockWidget(props: { index: number }) {
+export function ClockWidget(props: { index: number; variant: WidgetVariant }) {
   const [timeValue, setTimeValue] = useState(getTimeString())
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export function ClockWidget(props: { index: number }) {
 
   return (
     <WidgetWrapper
+      variant={props.variant}
       index={props.index}
       data={''}
       type="clock"
@@ -28,7 +30,11 @@ export function ClockWidget(props: { index: number }) {
       className="w-full h-full p-3"
     >
       <div className="flex flex-1 items-center justify-center bg-gray-800 card">
-        <div className="font-light text-xl">{timeValue}</div>
+        {props.variant === 'spawner' ? (
+          <div className="font-light text-xl">9:35 PM</div>
+        ) : (
+          <div className="font-light text-xl">{timeValue}</div>
+        )}
       </div>
     </WidgetWrapper>
   )

@@ -3,6 +3,7 @@ import { cn } from '../common/utils/cn'
 import { isUrl } from '../common/utils/is-url'
 import { usePlaceholderContext } from './placeholder-context'
 import { WidgetWrapper } from './WidgetWrapper'
+import type { WidgetVariant } from '@/common/types'
 
 function urlOrNull(str: string) {
   try {
@@ -12,7 +13,11 @@ function urlOrNull(str: string) {
   }
 }
 
-export function BookmarkWidget(props: { index: number; value: string }) {
+export function BookmarkWidget(props: {
+  index: number
+  value: string
+  variant: WidgetVariant
+}) {
   const ref = useRef(null)
   const [iconLoading, setIconLoading] = useState(false)
   const { setTooltip } = usePlaceholderContext()
@@ -39,7 +44,12 @@ export function BookmarkWidget(props: { index: number; value: string }) {
   }
 
   return (
-    <WidgetWrapper index={props.index} data={props.value} type="url">
+    <WidgetWrapper
+      index={props.index}
+      data={props.value}
+      type="url"
+      variant={props.variant}
+    >
       <div
         ref={ref}
         className={cn(

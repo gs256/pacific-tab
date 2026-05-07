@@ -117,9 +117,15 @@ export function Placeholder(props: {
     >
       <PlaceholderContext.Provider value={{ setTooltip }}>
         {props.widget?.type === 'url' && (
-          <BookmarkWidget index={props.index} value={props.widget.data} />
+          <BookmarkWidget
+            index={props.index}
+            value={props.widget.data}
+            variant="default"
+          />
         )}
-        {props.widget?.type === 'clock' && <ClockWidget index={props.index} />}
+        {props.widget?.type === 'clock' && (
+          <ClockWidget index={props.index} variant="default" />
+        )}
       </PlaceholderContext.Provider>
     </div>
   )

@@ -108,13 +108,19 @@ export const useSharedStore = create<SharedState>((set, state) => ({
 
     if (dragData) {
       if (index === undefined) {
-        s.setWidget(dragData.index, dragData?.widget)
+        if (dragData.index) {
+          s.setWidget(dragData.index, dragData?.widget)
+        }
       } else {
         if (canPlace()) {
-          s.setWidget(dragData.index, s.items[index])
+          if (dragData.index) {
+            s.setWidget(dragData.index, s.items[index])
+          }
           s.setWidget(index, dragData.widget)
         } else {
-          s.setWidget(dragData.index, dragData?.widget)
+          if (dragData.index) {
+            s.setWidget(dragData.index, dragData?.widget)
+          }
         }
       }
     }
