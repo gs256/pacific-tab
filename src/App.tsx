@@ -11,7 +11,7 @@ import { WidgetDrawer } from './widget-drawer/WidgetDrawer'
 
 export function App() {
   useSharedState()
-  const { handleDrop, setWidget, dragData } = useSharedStore()
+  const { handleDrop, dragData } = useSharedStore()
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -21,14 +21,6 @@ export function App() {
 
   const handleMouseUp = () => {
     handleDrop(undefined)
-  }
-
-  const test = () => {
-    setWidget(1, {
-      type: 'clock',
-      data: '',
-      spanX: 2,
-    })
   }
 
   useEffect(() => {
