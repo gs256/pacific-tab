@@ -15,7 +15,9 @@ export function WidgetWrapper(
 
   const handleDragStart = () => {
     setDragData({ index: props.index, widget: props.config })
-    setWidget(props.index, null)
+    if (props.variant !== 'spawner') {
+      setWidget(props.index, null)
+    }
   }
 
   const handleDragEnd = () => {}
