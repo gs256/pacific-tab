@@ -25,9 +25,11 @@ export function WidgetDrawer(
       />
       <div className="drawer-content">
         {props.children}
-        <label htmlFor="my-drawer-1" className="drawer-button">
-          <Plus className="h-5 w-5" />
-        </label>
+        <div className="flex justify-center mt-4">
+          <label htmlFor="my-drawer-1" className="drawer-button">
+            <Plus className="h-5 w-5 text-gray-400 cursor-pointer" />
+          </label>
+        </div>
       </div>
       <div className="drawer-side">
         <label

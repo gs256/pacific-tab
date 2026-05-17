@@ -55,11 +55,10 @@ export function App() {
             }
           >
             <WidgetGrid />
+            <div className="absolute left-0 w-full bottom-4 text-slate-600 font-mono flex justify-center">
+              [pacific-tab]
+            </div>
           </WidgetDrawer>
-          <div className="absolute left-50% bottom-4 text-slate-600 font-mono">
-            [pacific-tab]
-            <button onClick={test}>add clock</button>
-          </div>
         </div>
       </ContextMenu>
 
