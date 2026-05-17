@@ -1,6 +1,7 @@
 import { cn } from '@/common/utils/cn'
 import { useSharedStore } from '@/shared-state/shared-state'
 import { ClockWidget } from '@/widget-grid/ClockWidget'
+import { Plus } from 'lucide-react'
 import { useState, type CSSProperties, type PropsWithChildren } from 'react'
 
 export function WidgetDrawer(
@@ -24,8 +25,8 @@ export function WidgetDrawer(
       />
       <div className="drawer-content">
         {props.children}
-        <label htmlFor="my-drawer-1" className="btn drawer-button">
-          Open drawer
+        <label htmlFor="my-drawer-1" className="drawer-button">
+          <Plus className="h-5 w-5" />
         </label>
       </div>
       <div className="drawer-side">
