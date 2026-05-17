@@ -24,9 +24,7 @@ export function ClockWidget(props: { index: number; variant: WidgetVariant }) {
     <WidgetWrapper
       variant={props.variant}
       index={props.index}
-      data={''}
-      type="clock"
-      spanX={2}
+      config={{ type: 'clock', data: '', spanX: 2 }}
       className="w-full h-full p-3"
     >
       <div className="flex flex-1 items-center justify-center bg-gray-800 card">

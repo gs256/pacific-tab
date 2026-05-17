@@ -46,8 +46,7 @@ export function BookmarkWidget(props: {
   return (
     <WidgetWrapper
       index={props.index}
-      data={props.value}
-      type="url"
+      config={{ data: props.value, type: 'url' }}
       variant={props.variant}
     >
       <div

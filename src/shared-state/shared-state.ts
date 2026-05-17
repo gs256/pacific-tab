@@ -133,7 +133,7 @@ export function useSharedState() {
 
   const saveItemsToLocalStorage = useDebounce(() => {
     localStorage.setItem('items', JSON.stringify(items))
-  }, 200)
+  }, 100)
 
   useEffect(() => {
     saveItemsToLocalStorage()

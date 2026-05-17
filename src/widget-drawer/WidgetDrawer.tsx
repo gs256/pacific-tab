@@ -34,7 +34,7 @@ export function WidgetDrawer(
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="bg-base-200 min-h-full w-80 p-4 flex flex-col items-center">
+        <div className="bg-base-200 min-h-full w-80 p-4 flex flex-col items-center justify-center">
           <DrawerItem placeholderClass="h-17 w-36" text="Clock 2x1">
             <ClockWidget index={0} variant="spawner" />
           </DrawerItem>

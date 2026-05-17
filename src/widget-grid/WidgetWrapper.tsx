@@ -8,13 +8,13 @@ export function WidgetWrapper(
     index: number
     className?: string
     variant: WidgetVariant
-  } & PropsWithChildren &
-    WidgetConfig,
+    config: WidgetConfig
+  } & PropsWithChildren,
 ) {
   const { setDragData, setWidget } = useSharedStore()
 
   const handleDragStart = () => {
-    setDragData({ index: props.index, widget: { ...props } })
+    setDragData({ index: props.index, widget: props.config })
     setWidget(props.index, null)
   }
 
