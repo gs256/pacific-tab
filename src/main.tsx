@@ -4,7 +4,9 @@ import './index.css'
 import { App } from './App'
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/image-cache-worker.js')
+  navigator.serviceWorker.register(
+    import.meta.env.BASE_URL + 'image-cache-worker.js',
+  )
 }
 
 createRoot(document.getElementById('root')!).render(
