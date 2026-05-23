@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { cn } from '@/common/utils/cn'
 import { useContextMenuContext } from '../context-menu/context-menu-context'
-import { isUrl } from '../common/utils/is-url'
+import { isUrl, normalizeUrl } from '../common/utils/url'
 import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
 import { useSharedStore } from '@/shared-state/shared-state'
@@ -38,11 +38,16 @@ export function Placeholder(props: {
     e.preventDefault()
   }
 
+  const makeBookmark = (link: string) => {
+    link = normalizeUrl(link)
+    setWidget(props.index, { type: 'url', data: link })
+  }
+
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault()
     const dropped = e.dataTransfer?.getData('text/plain')
     if (isUrl(dropped)) {
-      setWidget(props.index, { type: 'url', data: dropped })
+      makeBookmark(dropped)
     } else {
       handleDrop(props.index)
     }
@@ -72,10 +77,7 @@ export function Placeholder(props: {
         if (id === 'paste') {
           window.navigator.clipboard.readText().then((text) => {
             if (isUrl(text)) {
-              setWidget(props.index, {
-                type: 'url',
-                data: text,
-              })
+              makeBookmark(text)
             } else {
               toaster.show({ text: 'Not a valid URL', severity: 'error' })
             }

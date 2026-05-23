@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '../common/utils/cn'
-import { isUrl } from '../common/utils/is-url'
+import { isUrl } from '../common/utils/url'
 import { usePlaceholderContext } from './placeholder-context'
 import { WidgetWrapper } from './WidgetWrapper'
 import type { WidgetVariant } from '@/common/types'
