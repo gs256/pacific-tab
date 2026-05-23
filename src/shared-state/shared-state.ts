@@ -19,7 +19,7 @@ export interface SharedState {
   isCollapsed(index: number): boolean
   handleDrop(index: number | undefined): void
   handleMouseEnter(index: number): void
-  handleMouseLeave(index: number): void
+  handleMouseLeave(): void
 }
 
 export const useSharedStore = create<SharedState>((set, state) => ({

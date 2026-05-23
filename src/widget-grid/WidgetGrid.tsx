@@ -5,7 +5,11 @@ import styles from './WidgetGrid.module.css'
 import { useSharedStore } from '@/shared-state/shared-state'
 
 export function WidgetGrid() {
-  const { items } = useSharedStore()
+  const { items, handleMouseLeave } = useSharedStore()
+
+  const handleLeave = () => {
+    handleMouseLeave()
+  }
 
   return (
     <div
@@ -15,6 +19,7 @@ export function WidgetGrid() {
         `grid-cols-${GRID_COLUMNS}`,
         `grid-rows-${GRID_ROWS}`,
       )}
+      onPointerLeave={handleLeave}
     >
       {items.map((item, index) => (
         <Placeholder index={index} key={index} widget={item} />

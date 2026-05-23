@@ -19,7 +19,6 @@ export function Placeholder(props: {
     handleDrop,
     isCollapsed,
     handleMouseEnter,
-    handleMouseLeave,
     highlight,
   } = useSharedStore()
   const contextMenu = useContextMenuContext()
@@ -33,9 +32,7 @@ export function Placeholder(props: {
     handleMouseEnter(props.index)
   }
 
-  const onMouseLeave = () => {
-    handleMouseLeave(props.index)
-  }
+  const onMouseLeave = () => {}
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
