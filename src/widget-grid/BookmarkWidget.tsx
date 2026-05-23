@@ -37,24 +37,18 @@ export function BookmarkWidget(props: {
 
   const valueIsUrl = useMemo(() => isUrl(props.value), [props.value])
 
-  const handleClick = () => {
-    if (valueIsUrl) {
-      window.open(props.value)
-    }
-  }
-
   return (
     <WidgetWrapper
       index={props.index}
       config={{ data: props.value, type: 'url' }}
       variant={props.variant}
     >
-      <div
+      <a
         ref={ref}
         className={cn(
           'rounded-full w-12 h-12 bg-gray-800 flex items-center justify-center',
         )}
-        onClick={handleClick}
+        href={valueIsUrl ? props.value : undefined}
       >
         <FaviconImg
           key={faviconUrl}
@@ -62,7 +56,7 @@ export function BookmarkWidget(props: {
           setLoading={setIconLoading}
         />
         {iconLoading && <div className="absolute">{firstLetter}</div>}
-      </div>
+      </a>
     </WidgetWrapper>
   )
 }
