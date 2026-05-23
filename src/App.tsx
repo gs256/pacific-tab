@@ -8,6 +8,7 @@ import { Toaster } from './toaster/Toaster'
 import { WidgetGrid } from './widget-grid/WidgetGrid'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { WidgetDrawer } from './widget-drawer/WidgetDrawer'
+import { span } from './common/utils/widget-utils'
 
 export function App() {
   useSharedState()
@@ -56,11 +57,15 @@ export function App() {
 
       {dragData && (
         <div
-          className="absolute"
-          style={{ left: position.x, top: position.y, pointerEvents: 'none' }}
-        >
-          <div>drag me</div>
-        </div>
+          className="absolute card bg-gray-500"
+          style={{
+            left: position.x - 15,
+            top: position.y - 15,
+            width: span(dragData.widget) === 2 ? 10 * 4 * 2 + 2 * 4 : 10 * 4,
+            height: 10 * 4,
+            pointerEvents: 'none',
+          }}
+        ></div>
       )}
     </Toaster>
   )
