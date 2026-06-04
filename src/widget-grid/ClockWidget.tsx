@@ -10,7 +10,10 @@ function getTimeString() {
   return currentTime
 }
 
-export function ClockWidget(props: { index: number; variant: WidgetVariant }) {
+export function ClockWidget(props: {
+  index: number | undefined
+  variant: WidgetVariant
+}) {
   const [timeValue, setTimeValue] = useState(getTimeString())
 
   useEffect(() => {

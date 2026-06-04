@@ -90,7 +90,7 @@ export const useSharedStore = create<SharedState>((set, state) => ({
     set(() => ({ highlight: null }))
   },
 
-  handleDrop: (index?: number) => {
+  handleDrop: (index: number | undefined) => {
     const s = state()
     const dragData = s.dragData
 
@@ -108,17 +108,17 @@ export const useSharedStore = create<SharedState>((set, state) => ({
 
     if (dragData) {
       if (index === undefined) {
-        if (dragData.index) {
+        if (dragData.index !== undefined) {
           s.setWidget(dragData.index, dragData?.widget)
         }
       } else {
         if (canPlace()) {
-          if (dragData.index) {
+          if (dragData.index !== undefined) {
             s.setWidget(dragData.index, s.items[index])
           }
           s.setWidget(index, dragData.widget)
         } else {
-          if (dragData.index) {
+          if (dragData.index !== undefined) {
             s.setWidget(dragData.index, dragData?.widget)
           }
         }

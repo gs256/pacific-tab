@@ -14,7 +14,7 @@ function urlOrNull(str: string) {
 }
 
 export function BookmarkWidget(props: {
-  index: number
+  index: number | undefined
   value: string
   variant: WidgetVariant
 }) {

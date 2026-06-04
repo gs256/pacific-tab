@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react'
 
 export function WidgetWrapper(
   props: {
-    index: number
+    index: number | undefined
     className?: string
     variant: WidgetVariant
     config: WidgetConfig
@@ -15,7 +15,7 @@ export function WidgetWrapper(
 
   const handleDragStart = () => {
     setDragData({ index: props.index, widget: props.config })
-    if (props.variant !== 'spawner') {
+    if (props.variant !== 'spawner' && props.index !== undefined) {
       setWidget(props.index, null)
     }
   }
