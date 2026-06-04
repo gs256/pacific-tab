@@ -1,4 +1,4 @@
-import { useSharedState, useSharedStore } from './shared-state/shared-state'
+import { useSharedStore } from './shared-state/shared-state'
 import { cn } from './common/utils/cn'
 import { GRID_COLUMNS, GRID_ROWS } from './common/utils/const'
 import styles from './App.module.css'
@@ -9,10 +9,12 @@ import { WidgetGrid } from './widget-grid/WidgetGrid'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { WidgetDrawer } from './widget-drawer/WidgetDrawer'
 import { span } from './common/utils/widget-utils'
+import { Ellipsis, Plus } from 'lucide-react'
+import { contextMenuStore } from './context-menu/context-menu-store'
 
 export function App() {
-  useSharedState()
   const { handleDrop, dragData } = useSharedStore()
+  const { open } = contextMenuStore()
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const ref = useRef<HTMLDivElement>(null)
 
@@ -22,6 +24,28 @@ export function App() {
 
   const handleMouseUp = () => {
     handleDrop(undefined)
+  }
+
+  const openElipsisMenu = (event: React.MouseEvent) => {
+    // FIXME: page-wide click callback closes menu, hence stopPropagation()
+    event.stopPropagation()
+
+    open({
+      event: event,
+      onClick: (id: string) => {
+        throw new Error('Function not implemented.')
+      },
+      items: [
+        {
+          id: 'export',
+          label: 'Export layout',
+        },
+        {
+          id: 'import',
+          label: 'Import layout',
+        },
+      ],
+    })
   }
 
   useEffect(() => {
@@ -48,6 +72,15 @@ export function App() {
             }
           >
             <WidgetGrid />
+            <div className="flex justify-center mt-4 gap-3">
+              <label htmlFor="my-drawer-1" className="drawer-button">
+                <Plus className="h-5 w-5 text-gray-400 cursor-pointer" />
+              </label>
+              <Ellipsis
+                className="h-5 w-5 text-gray-400 cursor-pointer"
+                onClick={openElipsisMenu}
+              />
+            </div>
             <div className="absolute left-0 w-full bottom-4 text-slate-600 font-mono flex justify-center">
               [pacific-tab]
             </div>

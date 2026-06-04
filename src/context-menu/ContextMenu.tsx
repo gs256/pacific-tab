@@ -1,50 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react'
-import {
-  ContextMenuContext,
-  type ContextMenuContextType,
-  type ContextMenuItem,
-} from './context-menu-context'
+import React, { useEffect } from 'react'
+import { contextMenuStore } from './context-menu-store'
 import { cn } from '@/common/utils/cn'
 
 export function ContextMenu(props: { children?: React.ReactNode }) {
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-  } | null>(null)
-  const [items, setItems] = useState<ContextMenuItem[]>([])
-  const selectCallback = useRef<(id: string) => void | null>(null)
-
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault()
-    setContextMenu({ x: e.clientX, y: e.clientY })
-  }
+  const { position, items, selectCallback, close } = contextMenuStore()
 
   useEffect(() => {
-    const close = () => setContextMenu(null)
-    window.addEventListener('click', () => close())
+    window.addEventListener('click', close)
     window.addEventListener('keydown', (e) => e.key === 'Escape' && close())
 
     return () => {
       window.removeEventListener('click', close)
-      selectCallback.current = null
     }
-  }, [])
-
-  const context: ContextMenuContextType = {
-    open: (params) => {
-      selectCallback.current = params.onClick
-      setItems(params.items)
-      handleContextMenu(params.event)
-    },
-  }
+  }, [close])
 
   return (
-    <ContextMenuContext.Provider value={context}>
+    <>
       {props.children}
-      {contextMenu && (
+      {position && (
         <ul
           className="menu bg-base-200 rounded-box w-56 fixed z-5"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
+          style={{ top: position.y, left: position.x }}
         >
           {items.map((item) => (
             <li
@@ -55,7 +31,7 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
               )}
             >
               <a
-                onClick={() => selectCallback.current?.(item.id)}
+                onClick={() => selectCallback?.(item.id)}
                 aria-disabled={item.disabled === true}
               >
                 {item.label}
@@ -64,6 +40,6 @@ export function ContextMenu(props: { children?: React.ReactNode }) {
           ))}
         </ul>
       )}
-    </ContextMenuContext.Provider>
+    </>
   )
 }

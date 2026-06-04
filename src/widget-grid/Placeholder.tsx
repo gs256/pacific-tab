@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { cn } from '@/common/utils/cn'
-import { useContextMenuContext } from '../context-menu/context-menu-context'
 import { isUrl, normalizeUrl } from '../common/utils/url'
 import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
@@ -8,6 +7,7 @@ import { useSharedStore } from '@/shared-state/shared-state'
 import { BookmarkWidget } from './BookmarkWidget'
 import { ClockWidget } from './ClockWidget'
 import type { WidgetConfig } from '@/common/types'
+import { contextMenuStore } from '@/context-menu/context-menu-store'
 
 export function Placeholder(props: {
   index: number
@@ -21,7 +21,7 @@ export function Placeholder(props: {
     handleMouseEnter,
     highlight,
   } = useSharedStore()
-  const contextMenu = useContextMenuContext()
+  const { open } = contextMenuStore()
   const toaster = useToasterContext()
   const [tooltip, setTooltip] = useState('')
 
@@ -62,7 +62,7 @@ export function Placeholder(props: {
     if (event.altKey || event.ctrlKey) {
       return
     }
-    contextMenu.open({
+    open({
       event,
       items: [
         { id: 'paste', label: 'Paste' },
