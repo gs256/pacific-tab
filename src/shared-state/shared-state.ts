@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDebounce } from '../common/utils/use-debounce'
-import { GRID_COLUMNS } from '../common/utils/const'
+import { GRID_COLUMNS, GRID_ROWS } from '../common/utils/const'
 import { create } from 'zustand'
 import type { DragData, WidgetConfig } from '@/common/types'
 import { loadItems } from '@/common/utils/utils'
@@ -20,6 +20,8 @@ export interface SharedState {
   handleDrop(index: number | undefined): void
   handleMouseEnter(index: number): void
   handleMouseLeave(): void
+  importItems(items: string): void
+  exportItems(): string
 }
 
 export const useSharedStore = create<SharedState>((set, state) => ({
@@ -125,6 +127,24 @@ export const useSharedStore = create<SharedState>((set, state) => ({
       }
     }
     s.setDragData(null)
+  },
+
+  importItems: (items: string) => {
+    const data = JSON.parse(items) as Array<WidgetConfig | null>
+    if (!Array.isArray(data)) {
+      return
+    }
+    if (data.length !== GRID_ROWS * GRID_COLUMNS) {
+      return
+    }
+    set({ items: data })
+  },
+
+  exportItems: () => {
+    const items = state().items
+    const data = JSON.stringify(items)
+    navigator.clipboard.writeText(data)
+    return data
   },
 }))
 

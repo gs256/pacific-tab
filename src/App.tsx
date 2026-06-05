@@ -1,4 +1,4 @@
-import { useSharedStore } from './shared-state/shared-state'
+import { useSharedState, useSharedStore } from './shared-state/shared-state'
 import { cn } from './common/utils/cn'
 import { GRID_COLUMNS, GRID_ROWS } from './common/utils/const'
 import styles from './App.module.css'
@@ -13,7 +13,8 @@ import { Ellipsis, Plus } from 'lucide-react'
 import { contextMenuStore } from './context-menu/context-menu-store'
 
 export function App() {
-  const { handleDrop, dragData } = useSharedStore()
+  useSharedState()
+  const { handleDrop, dragData, importItems, exportItems } = useSharedStore()
   const { open } = contextMenuStore()
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const ref = useRef<HTMLDivElement>(null)
@@ -33,7 +34,13 @@ export function App() {
     open({
       event: event,
       onClick: (id: string) => {
-        throw new Error('Function not implemented.')
+        if (id === 'export') {
+          exportItems()
+        } else if (id === 'import') {
+          navigator.clipboard.readText().then((text) => {
+            importItems(text)
+          })
+        }
       },
       items: [
         {
