@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { cn } from '@/common/utils/cn'
 import { isUrl, normalizeUrl } from '../common/utils/url'
-import { useToasterContext } from '../toaster/toaster-context'
 import { PlaceholderContext } from './placeholder-context'
 import { useSharedStore } from '@/shared-state/shared-state'
 import { BookmarkWidget } from './BookmarkWidget'
 import { ClockWidget } from './ClockWidget'
 import type { WidgetConfig } from '@/common/types'
 import { contextMenuStore } from '@/context-menu/context-menu-store'
+import { useToaster } from '@/toaster/useToaster'
 
 export function Placeholder(props: {
   index: number
@@ -22,7 +22,7 @@ export function Placeholder(props: {
     highlight,
   } = useSharedStore()
   const { open } = contextMenuStore()
-  const toaster = useToasterContext()
+  const toaster = useToaster()
   const [tooltip, setTooltip] = useState('')
 
   const highlighted = highlight?.cells.includes(props.index) ?? false

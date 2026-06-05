@@ -1,10 +1,6 @@
 import type React from 'react'
-import {
-  ToasterContext,
-  type Toaster,
-  type ToastOptions,
-} from './toaster-context'
-import { useRef, useState } from 'react'
+import { useToaster, type Toaster, type ToastOptions } from './useToaster'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { cn } from '@/common/utils/cn'
 import styles from './Toaster.module.css'
 
@@ -16,14 +12,15 @@ const severityClasses: Record<ToastOptions['severity'], string> = {
 }
 
 export function Toaster(props: { children?: React.ReactNode }) {
+  const { setShowCallback } = useToaster()
   const [visible, setVisible] = useState(false)
   const [text, setText] = useState('')
   const [severity, setSeverity] = useState<ToastOptions['severity']>('info')
   const showTimeout = useRef<number | undefined>(undefined)
   const hideTimeout = useRef<number | undefined>(undefined)
 
-  const context: Toaster = {
-    show: (options) => {
+  const show = useCallback(
+    (options: ToastOptions) => {
       setText(options.text)
       setSeverity(options.severity)
 
@@ -43,10 +40,15 @@ export function Toaster(props: { children?: React.ReactNode }) {
         }, 3_000)
       }, delay)
     },
-  }
+    [visible],
+  )
+
+  useEffect(() => {
+    setShowCallback(show)
+  }, [setShowCallback, show])
 
   return (
-    <ToasterContext.Provider value={context}>
+    <>
       {props.children}
       <div
         className={cn(
@@ -59,6 +61,6 @@ export function Toaster(props: { children?: React.ReactNode }) {
           <span>{text}</span>
         </div>
       </div>
-    </ToasterContext.Provider>
+    </>
   )
 }
