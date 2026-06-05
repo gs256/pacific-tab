@@ -5,6 +5,8 @@ import { create } from 'zustand'
 import type { DragData, WidgetConfig } from '@/common/types'
 import { loadItems } from '@/common/utils/utils'
 import { isSingleCell, span, willWrap } from '@/common/utils/widget-utils'
+import { useToaster } from '@/toaster/useToaster'
+import { safeJsonParse } from '@/common/utils/safe-json-parse'
 
 export interface SharedState {
   items: Array<WidgetConfig | null>
@@ -130,20 +132,41 @@ export const useSharedStore = create<SharedState>((set, state) => ({
   },
 
   importItems: (items: string) => {
-    const data = JSON.parse(items) as Array<WidgetConfig | null>
+    const invalidFormatToast = () => {
+      useToaster.getState().show({
+        text: 'Invalid format',
+        severity: 'error',
+      })
+    }
+
+    const data = safeJsonParse(items) as Array<WidgetConfig | null>
     if (!Array.isArray(data)) {
+      invalidFormatToast()
       return
     }
     if (data.length !== GRID_ROWS * GRID_COLUMNS) {
+      invalidFormatToast()
       return
     }
+
     set({ items: data })
+
+    useToaster.getState().show({
+      text: 'Layout imported successfully',
+      severity: 'success',
+    })
   },
 
   exportItems: () => {
     const items = state().items
     const data = JSON.stringify(items)
     navigator.clipboard.writeText(data)
+
+    useToaster.getState().show({
+      text: 'Copied to clipboard',
+      severity: 'success',
+    })
+
     return data
   },
 }))
