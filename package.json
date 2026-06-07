@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "pnpm cross-env DEPLOY=true vite build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist/web",
     "build:ext": "vite build --config vite.config.ext.ts"
   },
   "dependencies": {
