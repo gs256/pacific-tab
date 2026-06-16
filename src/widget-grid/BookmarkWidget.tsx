@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { cn } from '../common/utils/cn'
 import { isUrl } from '../common/utils/url'
-import { usePlaceholderContext } from './placeholder-context'
+import { usePlaceholderStore } from './placeholder-store'
 import { WidgetWrapper } from './WidgetWrapper'
 import type { WidgetVariant } from '@/common/types'
 
@@ -20,7 +20,7 @@ export function BookmarkWidget(props: {
 }) {
   const ref = useRef(null)
   const [iconLoading, setIconLoading] = useState(false)
-  const { setTooltip } = usePlaceholderContext()
+  const { setTooltip } = usePlaceholderStore()
 
   useEffect(() => {
     setTooltip(props.value)

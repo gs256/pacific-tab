@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { cn } from '@/common/utils/cn'
 import { isUrl, normalizeUrl } from '../common/utils/url'
-import { PlaceholderContext } from './placeholder-context'
+import { usePlaceholderStore } from './placeholder-store'
 import { useSharedStore } from '@/shared-state/shared-state'
 import { BookmarkWidget } from './BookmarkWidget'
 import { ClockWidget } from './ClockWidget'
@@ -23,7 +23,7 @@ export function Placeholder(props: {
   } = useSharedStore()
   const { open } = contextMenuStore()
   const toaster = useToaster()
-  const [tooltip, setTooltip] = useState('')
+  const { tooltip } = usePlaceholderStore()
 
   const highlighted = highlight?.cells.includes(props.index) ?? false
   const hasWidget = Boolean(props.widget)
@@ -114,18 +114,16 @@ export function Placeholder(props: {
           : {}
       }
     >
-      <PlaceholderContext.Provider value={{ setTooltip }}>
-        {props.widget?.type === 'url' && (
-          <BookmarkWidget
-            index={props.index}
-            value={props.widget.data}
-            variant="default"
-          />
-        )}
-        {props.widget?.type === 'clock' && (
-          <ClockWidget index={props.index} variant="default" />
-        )}
-      </PlaceholderContext.Provider>
+      {props.widget?.type === 'url' && (
+        <BookmarkWidget
+          index={props.index}
+          value={props.widget.data}
+          variant="default"
+        />
+      )}
+      {props.widget?.type === 'clock' && (
+        <ClockWidget index={props.index} variant="default" />
+      )}
     </div>
   )
 }
